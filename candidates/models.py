@@ -10,6 +10,7 @@ class CandidateProfile(models.Model):
     current_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     expected_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     location = models.CharField(max_length=255)
+    parent_name=models.CharField(max_length=255)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
