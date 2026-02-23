@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Applicants - {{ job.title }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="fw-bold mb-0">Applicants</h2>
+        <p class="text-muted mb-0">Job: <strong>{{ job.title }}</strong> &nbsp;|&nbsp; {{ applications|length }} applicant(s)</p>
+    </div>
+    <a href="{{ url_for('list_jobs') }}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back to Jobs
+    </a>
+</div>
+
+<!-- Filters - FR-14 -->
+<div class="card mb-4">
+    <div class="card-body py-2">
+        <form method="GET" class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold mb-1">Filter by Skill</label>
+                <input type="text" name="skill" class="form-control form-control-sm"
+                       value="{{ skill_filter }}" placeholder="e.g. Python">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold mb-1">Min Experience (yrs)</label>
+                <input type="number" name="experience" class="form-control form-control-sm"
+                       value="{{ exp_filter }}" placeholder="e.g. 3" min="0">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold mb-1">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Statuses</option>
+                    {% for s in APPLICATION_STATUSES %}
+                    <option value="{{ s }}" {% if status_filter == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-sm btn-primary w-100">
+                    <i class="fas fa-filter me-1"></i>Filter
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url_for('job_applicants', job_id=job.id) }}"
+                   class="btn btn-sm btn-outline-secondary w-100">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if applications %}
+<div class="row g-3">
+    {% for app in applications %}
+    <div class="col-12">
+        <div class="card {% if app.status == 'Shortlisted' %}border-success{% elif app.status == 'Rejected' %}border-danger{% endif %}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h6 class="mb-0 fw-bold">
+                                <a href="{{ url_for('candidate_profile_view', candidate_id=app.candidate.id) }}"
+                                   class="text-decoration-none text-dark">
+                                    {{ app.candidate.full_name }}
+                                </a>
+                            </h6>
+                            {% set app_colors = {
+                                'Applied': 'secondary', 'Under Review': 'info',
+                                'Shortlisted': 'success', 'Interview Scheduled': 'primary',
+                                'Interview Done': 'primary', 'Offer Extended': 'warning',
+                                'Hired': 'success', 'Rejected': 'danger'} %}
+                            <span class="badge bg-{{ app_colors.get(app.status, 'secondary') }}">
+                                {{ app.status }}
+                            </span>
+                        </div>
+                        <div class="text-muted small d-flex gap-3 flex-wrap">
+                            {% if app.candidate.current_role %}
+                            <span><i class="fas fa-briefcase me-1"></i>{{ app.candidate.current_role }}</span>
+                            {% endif %}
+                            {% if app.candidate.experience_years %}
+                            <span><i class="fas fa-chart-line me-1"></i>{{ app.candidate.experience_years }} yrs experience</span>
+                            {% endif %}
+                            {% if app.candidate.location %}
+                            <span><i class="fas fa-map-marker-alt me-1"></i>{{ app.candidate.location }}</span>
+                            {% endif %}
+                            <span><i class="fas fa-calendar me-1"></i>Applied {{ app.applied_at.strftime('%d %b %Y') }}</span>
+                        </div>
+                        {% if app.candidate.skills %}
+                        <div class="mt-1">
+                            {% for skill in app.candidate.skills_list()[:6] %}
+                            <span class="badge bg-light text-dark border me-1">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if app.notes %}
+                        <div class="mt-1 text-muted small">
+                            <i class="fas fa-sticky-note me-1"></i><em>{{ app.notes }}</em>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="ms-3 d-flex flex-column gap-2">
+                        <!-- Quick Actions -->
+                        <div class="d-flex gap-1">
+                            {% if app.status != 'Shortlisted' %}
+                            <form method="POST" action="{{ url_for('shortlist', app_id=app.id) }}">
+                                <button type="submit" class="btn btn-sm btn-success" title="Shortlist">
+                                    <i class="fas fa-check"></i> Shortlist
+                                </button>
+                            </form>
+                            {% endif %}
+                            {% if app.status != 'Rejected' %}
+                            <form method="POST" action="{{ url_for('reject', app_id=app.id) }}">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Reject">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+
+                        <!-- Status Update with Notes -->
+                        <button class="btn btn-sm btn-outline-primary"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#statusForm{{ app.id }}">
+                            <i class="fas fa-edit me-1"></i>Update Status
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collapsible Status Update Form -->
+                <div class="collapse mt-3" id="statusForm{{ app.id }}">
+                    <hr>
+                    <form method="POST" action="{{ url_for('update_status', app_id=app.id) }}">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <select name="status" class="form-select form-select-sm">
+                                    {% for s in APPLICATION_STATUSES %}
+                                    <option value="{{ s }}" {% if app.status == s %}selected{% endif %}>{{ s }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="notes" class="form-control form-control-sm"
+                                       value="{{ app.notes or '' }}"
+                                       placeholder="Add recruiter notes (optional)">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-sm btn-primary w-100">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card text-center py-5">
+    <div class="card-body">
+        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">No applicants found</h5>
+        <p class="text-muted">{% if skill_filter or exp_filter or status_filter %}Try adjusting your filters.{% else %}No one has applied yet.{% endif %}</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
