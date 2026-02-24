@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    AUTH_USER_MODEL = 'users.User'
+    'rest_framework',
     'applications',
     'candidates',
     'companies',
@@ -49,8 +49,6 @@ INSTALLED_APPS = [
     'resumes',
     'saved_jobs',
     'skills',
-    'users',
-
 ]
 
 MIDDLEWARE = [
@@ -63,7 +61,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'jobportel.urls'
+AUTH_USER_MODEL = 'users.User'
+
+ROOT_URLCONF = 'jobportal.urls'
 
 TEMPLATES = [
     {
@@ -80,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'jobportel.wsgi.application'
+WSGI_APPLICATION = 'jobportal.wsgi.application'
 
 
 # Database
