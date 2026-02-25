@@ -37,10 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Third party
     'rest_framework',
-    'django_filters',
-    # Local apps
     'applications',
     'candidates',
     'companies',
@@ -52,7 +49,6 @@ INSTALLED_APPS = [
     'resumes',
     'saved_jobs',
     'skills',
-    'drf_yasg',
 ]
 AUTH_USER_MODEL = 'users.User'
 
@@ -65,6 +61,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTH_USER_MODEL = 'users.User'
 
 ROOT_URLCONF = 'jobportal.urls'
 
