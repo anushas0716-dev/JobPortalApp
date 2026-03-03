@@ -8,6 +8,13 @@ class Conversation(models.Model):
     employer = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ['candidate', 'employer']
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Conversation: {self.candidate.full_name} - {self.employer.company.name}"
+
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name="messages")
