@@ -149,3 +149,6 @@ SECURE_HSTS_PRELOAD = os.getenv('SECURE_HSTS_PRELOAD', 'False').lower() == 'true
 # Rate Limiting Settings
 RATELIMIT_ENABLE = True
 RATELIMIT_USE_CACHE = 'default'
+
+MEDIA_URL  = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
