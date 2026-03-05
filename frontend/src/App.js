@@ -1,59 +1,65 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import ScheduleInterview from './pages/ScheduleInterview';
-import InterviewList from './pages/InterviewList';
-import InterviewDetail from './pages/InterviewDetail';
-import RecordFeedback from './pages/RecordFeedback';
-import Navbar from './components/Navbar';
+import Jobs from './pages/Jobs';
+import SavedJobs from './pages/SavedJobs';
 
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="spinner"></div></div>;
-  return user ? children : <Navigate to="/login" />;
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/" />;
 };
 
-const RecruiterRoute = ({ children }) => {
-  const { user, isRecruiter, loading } = useAuth();
-  if (loading) return null;
-  if (!user) return <Navigate to="/login" />;
-  if (!isRecruiter) return <Navigate to="/dashboard" />;
-  return children;
-};
+function Navbar() {
+  const location = useLocation();
+  if (location.pathname === '/') return null;
 
-const AppRoutes = () => {
-  const { user } = useAuth();
   return (
-    <>
-      {user && <Navbar />}
-      <Routes>
-        <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
-        <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/interviews" element={<ProtectedRoute><InterviewList /></ProtectedRoute>} />
-        <Route path="/interviews/:id" element={<ProtectedRoute><InterviewDetail /></ProtectedRoute>} />
-        <Route path="/schedule" element={<RecruiterRoute><ScheduleInterview /></RecruiterRoute>} />
-        <Route path="/interviews/:id/feedback" element={<RecruiterRoute><RecordFeedback /></RecruiterRoute>} />
-        <Route path="/" element={<Navigate to="/dashboard" />} />
-      </Routes>
-    </>
+    <nav style={{
+      background: '#0d0d0d', borderBottom: '1px solid #1a1a1a',
+      padding: '12px 24px', display: 'flex', alignItems: 'center',
+      justifyContent: 'space-between', fontFamily: "'Syne', sans-serif"
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ width:'10px', height:'10px', background:'#ff6b35', borderRadius:'50%', display:'inline-block', boxShadow:'0 0 12px #ff6b35' }} />
+        <span style={{ color:'#fff', fontWeight:'800', fontSize:'16px', textTransform:'uppercase', letterSpacing:'.05em' }}>JobPortal</span>
+      </div>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <Link to="/jobs" style={{
+          padding: '8px 18px', borderRadius: '8px', textDecoration: 'none',
+          fontFamily: "'Syne', sans-serif", fontSize: '13px', fontWeight: '700',
+          background: location.pathname === '/jobs' ? '#ff6b35' : 'transparent',
+          color: location.pathname === '/jobs' ? '#fff' : '#555',
+          border: '1px solid', borderColor: location.pathname === '/jobs' ? '#ff6b35' : '#222',
+          transition: 'all .15s'
+        }}>Jobs</Link>
+        <Link to="/saved-jobs" style={{
+          padding: '8px 18px', borderRadius: '8px', textDecoration: 'none',
+          fontFamily: "'Syne', sans-serif", fontSize: '13px', fontWeight: '700',
+          background: location.pathname === '/saved-jobs' ? '#ff6b35' : 'transparent',
+          color: location.pathname === '/saved-jobs' ? '#fff' : '#555',
+          border: '1px solid', borderColor: location.pathname === '/saved-jobs' ? '#ff6b35' : '#222',
+          transition: 'all .15s'
+        }}>♥ Saved Jobs</Link>
+        <button onClick={() => { localStorage.clear(); window.location.href='/'; }} style={{
+          padding: '8px 18px', borderRadius: '8px', border: '1px solid #222',
+          background: 'transparent', color: '#555', cursor: 'pointer',
+          fontFamily: "'Syne', sans-serif", fontSize: '13px', fontWeight: '700'
+        }}>Logout</button>
+      </div>
+    </nav>
   );
-};
+}
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Toaster position="top-right" />
-          <AppRoutes />
-        </div>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/jobs" element={<PrivateRoute><Jobs /></PrivateRoute>} />
+        <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
+      </Routes>
+    </Router>
   );
 }
 
