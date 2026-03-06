@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # TalentFlow – HR Resume Management System
 
 A full-stack application with a Node.js/Express backend API and a React frontend for managing job applications.
@@ -79,10 +80,75 @@ interview-management/
     │   └── index.css
     └── package.json
 >>>>>>> 9225ac16480c8d8d14dcc0805613574f3f4be98d
+=======
+HEAD
+HEAD
+# 📄 HR Resume API
+
+A production-ready REST API that allows candidates to submit resumes and HR teams to manage applications end-to-end.
+
+---
+
+## 🏗️ Project Structure
+
+```
+hr-resume-api/
+├── src/
+│   ├── config/
+│   │   ├── database.js        # MongoDB connection
+│   │   └── multer.js          # File upload config
+│   ├── controllers/
+│   │   ├── authController.js  # HR login/register
+│   │   └── resumeController.js # All resume logic
+│   ├── middleware/
+│   │   ├── auth.js            # JWT protect + role guard
+│   │   └── errorHandler.js    # Global error handler
+│   ├── models/
+│   │   ├── User.js            # HR user schema
+│   │   └── Resume.js          # Resume/application schema
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   └── resumeRoutes.js
+│   ├── utils/
+│   │   └── emailService.js    # Nodemailer notifications
+│   ├── app.js                 # Express app setup
+│   └── server.js              # Entry point
+├── uploads/resumes/           # Stored resume files
+├── tests/
+│   └── api.test.js
+├── .env.example
+└── package.json
+
+upstream/jobportelteam
+## JobPortalApp – Auth API Usage
+
+This project is a Django-based job portal. Below are the commands to test the authentication features **FR-02 (Login)** and **FR-03 (Password Management)** that are implemented in the `users` app.
+
+All commands assume:
+
+- You are in the project root: `/Users/amish/JobPortalApp`
+- Your virtual environment is at `.venv`
+- The server runs on port **8001**
+
+### 1. Setup and run server
+
+```bash
+cd /Users/amish/JobPortalApp
+python3 -m venv .venv
+source .venv/bin/activate
+pip install django
+python manage.py migrate
+python manage.py createsuperuser  # create an admin/user account
+python manage.py runserver 8001
+HEAD
+upstream/jobportelteam
+upstream/jobportelteam
+>>>>>>> a997018094b650bf61e68abebfd4f4578a474923
 ```
 
 ---
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 ## Getting Started
 
@@ -280,3 +346,298 @@ Backend API runs on: http://localhost:5000
 - ✅ Responsive design (mobile + desktop)
 - ✅ JWT authentication
 >>>>>>> 9225ac16480c8d8d14dcc0805613574f3f4be98d
+=======
+HEAD
+HEAD
+## 🚀 Quick Start
+
+### 1. Install dependencies
+```bash
+npm install
+```
+
+### 2. Configure environment
+```bash
+cp .env.example .env
+# Edit .env with your MongoDB URI, email credentials, and JWT secret
+```
+
+### 3. Run the server
+```bash
+# Development (with auto-reload)
+npm run dev
+
+# Production
+npm start
+```
+
+### 4. Run tests
+```bash
+npm test
+```
+
+---
+
+## 🌐 API Endpoints
+
+### Public (No Auth Required)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Health check |
+| `POST` | `/api/resumes/submit` | **Candidate submits resume** |
+| `GET` | `/api/resumes/status/:token` | Candidate checks application status |
+| `POST` | `/api/auth/register` | Register HR user |
+| `POST` | `/api/auth/login` | HR login → JWT token |
+
+### Protected (HR Auth Required — Bearer Token)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/auth/me` | Get current HR user |
+| `GET` | `/api/resumes/stats` | Dashboard statistics |
+| `GET` | `/api/resumes` | List all resumes (filters + pagination) |
+| `GET` | `/api/resumes/:id` | View single resume detail |
+| `GET` | `/api/resumes/:id/download` | Download resume file |
+| `PATCH` | `/api/resumes/:id/status` | Update application status |
+| `POST` | `/api/resumes/:id/notes` | Add HR note |
+| `PATCH` | `/api/resumes/:id/assign` | Assign to HR member |
+| `DELETE` | `/api/resumes/:id` | Delete resume (admin only) |
+
+---
+
+## 📤 Candidate Resume Submission
+
+**`POST /api/resumes/submit`** — `multipart/form-data`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `resume` | File | ✅ | PDF, DOC, or DOCX (max 5MB) |
+| `name` | string | ✅ | Candidate full name |
+| `email` | string | ✅ | Candidate email |
+| `phone` | string | | Phone number |
+| `jobTitle` | string | ✅ | Position applying for |
+| `department` | string | | Department name |
+| `jobId` | string | | Job listing ID |
+| `yearsOfExperience` | number | | Years of experience |
+| `expectedSalary` | string | | Expected salary range |
+| `coverLetter` | string | | Cover letter text |
+| `linkedin` | string | | LinkedIn URL |
+| `portfolio` | string | | Portfolio URL |
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Resume submitted successfully!",
+  "data": {
+    "submissionToken": "A1B2C3D4E5F6",
+    "applicationId": "65abc123...",
+    "candidateName": "Jane Smith",
+    "jobTitle": "Frontend Developer",
+    "submittedAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+---
+
+## 🔄 Application Status Flow
+
+```
+pending → reviewing → shortlisted → hired
+                   ↘ rejected
+```
+
+Candidates receive email notifications when status changes.
+
+---
+
+## 📋 HR: List Resumes with Filters
+
+**`GET /api/resumes?status=pending&jobTitle=engineer&page=1&limit=10`**
+
+| Query Param | Description |
+|-------------|-------------|
+| `status` | Filter by status (pending/reviewing/shortlisted/rejected/hired) |
+| `jobTitle` | Search by job title (partial match) |
+| `department` | Filter by department |
+| `page` | Page number (default: 1) |
+| `limit` | Items per page (default: 10) |
+| `sortBy` | Field to sort by (default: createdAt) |
+| `order` | asc or desc (default: desc) |
+
+---
+
+## 📧 Email Notifications
+
+The system automatically sends:
+- ✅ **Confirmation email to candidate** on submission (with reference token)
+- 📬 **Alert to HR team** on new submission
+- 🔔 **Status update to candidate** when HR changes status (reviewing/shortlisted/rejected/hired)
+
+---
+
+## 🔐 Authentication
+
+All HR routes require a Bearer token in the Authorization header:
+
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+Roles:
+- `hr` — Can view, update, and manage resumes
+- `admin` — All HR permissions + delete resumes
+
+---
+
+## 🧪 Example: Submit with cURL
+
+```bash
+curl -X POST http://localhost:3000/api/resumes/submit \
+  -F "resume=@/path/to/resume.pdf" \
+  -F "name=Jane Smith" \
+  -F "email=jane@example.com" \
+  -F "phone=+1-555-1234" \
+  -F "jobTitle=Backend Engineer" \
+  -F "department=Engineering" \
+  -F "yearsOfExperience=4" \
+  -F "coverLetter=I am excited to apply..."
+```
+
+---
+
+## 🧰 Tech Stack
+
+- **Runtime**: Node.js + Express.js
+- **Database**: MongoDB + Mongoose
+- **Auth**: JWT (jsonwebtoken) + bcryptjs
+- **File Upload**: Multer
+- **Email**: Nodemailer
+- **Validation**: express-validator
+- **Testing**: Jest + Supertest
+upstream/jobportelteam
+### 2. FR-02 – Login
+
+**Endpoint:** `POST /api/users/login/`  
+**Description:** Users log in with registered credentials. Invalid attempts return errors. Optional `remember_me` flag controls session persistence.
+
+#### 2.1 Invalid login (should fail)
+
+```bash
+curl -i -H "Content-Type: application/json" \
+  -X POST http://127.0.0.1:8001/api/users/login/ \
+  -d '{"username":"amish","password":"WRONG_PASSWORD","remember_me":true}'
+```
+
+Expected response (HTTP 400):
+
+```json
+{"success": false, "error": "Invalid credentials."}
+```
+
+#### 2.2 Valid login (should succeed and set cookies)
+
+```bash
+curl -i -c cookies.txt -H "Content-Type: application/json" \
+  -X POST http://127.0.0.1:8001/api/users/login/ \
+  -d '{"username":"amish","password":"NewPass123!","remember_me":true}'
+```
+
+- `-c cookies.txt` saves session cookies for later requests.
+- On success you get `{"success": true, "user": {...}}`.
+
+#### 2.3 Profile with active session
+
+```bash
+curl -i -b cookies.txt http://127.0.0.1:8001/api/users/profile/
+```
+
+Expected (HTTP 200):
+
+```json
+{"success": true, "user": { "id": 1, "username": "amish", "email": "amishraj2706@gmail.com", "role": "" }}
+```
+
+If you see `{"success": false, "error": "Authentication required."}`, it means there is no valid session (login failed or cookies not sent).
+
+---
+
+### 3. FR-03 – Password Management (Email/OTP + Secure Reset)
+
+FR-03 is implemented using:
+
+- `POST /api/users/password-reset/request/` – generate and send OTP
+- `POST /api/users/password-reset/confirm/` – verify OTP and set new password
+
+The project uses Django’s **console email backend**, so OTPs are printed to the terminal where `python manage.py runserver 8001` is running, not sent to a real mailbox.
+
+#### 3.1 Request password reset OTP
+
+```bash
+curl -i -H "Content-Type: application/json" \
+  -X POST http://127.0.0.1:8001/api/users/password-reset/request/ \
+  -d '{"email":"amishraj2706@gmail.com"}'
+```
+
+Expected (HTTP 200):
+
+```json
+{"success": true, "message": "If this email is registered, an OTP has been sent."}
+```
+
+Then, in the **runserver terminal**, look for an email-like message:
+
+```text
+Subject: Your password reset code
+To: amishraj2706@gmail.com
+
+Your password reset OTP is: 585869
+```
+
+#### 3.2 Confirm password reset with OTP
+
+Replace `585869` with the real OTP from the console:
+
+```bash
+curl -i -H "Content-Type: application/json" \
+  -X POST http://127.0.0.1:8001/api/users/password-reset/confirm/ \
+  -d '{"email":"amishraj2706@gmail.com","otp":"585869","new_password":"NewPass123!"}'
+```
+
+Expected (HTTP 200):
+
+```json
+{"success": true, "message": "Password has been reset successfully."}
+```
+
+If the OTP is wrong or expired, you will get:
+
+```json
+{"success": false, "error": "Invalid or expired OTP."}
+```
+
+#### 3.3 Verify new password
+
+Old password (should now fail):
+
+```bash
+curl -i -H "Content-Type: application/json" \
+  -X POST http://127.0.0.1:8001/api/users/login/ \
+  -d '{"username":"amish","password":"OLD_PASSWORD","remember_me":true}'
+```
+
+New password (should succeed):
+
+```bash
+curl -i -H "Content-Type: application/json" \
+  -X POST http://127.0.0.1:8001/api/users/login/ \
+  -d '{"username":"amish","password":"NewPass123!","remember_me":true}'
+```
+
+On success you again receive `{"success": true, "user": {...}}`, confirming FR‑02 and FR‑03 end‑to‑end.
+HEAD
+upstream/jobportelteam
+upstream/jobportelteam
+>>>>>>> a997018094b650bf61e68abebfd4f4578a474923

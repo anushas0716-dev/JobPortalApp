@@ -8,4 +8,14 @@ class EmployerProfile(models.Model):
     designation = models.CharField(max_length=255)
 
     created_at = models.DateTimeField(auto_now_add=True)
+<<<<<<< HEAD
     updated_at = models.DateTimeField(auto_now=True)
+=======
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.designation} at {self.company.name}"
+>>>>>>> a997018094b650bf61e68abebfd4f4578a474923
