@@ -1,6 +1,0 @@
-node_modules/
-uploads/resumes/*
-!uploads/resumes/.gitkeep
-.env
-*.log
-coverage/
