@@ -1,1 +1,0 @@
-# applications/__init__.py
