@@ -1,30 +1,20 @@
-<<<<<<< HEAD
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CandidateResumes from './components/CandidateResumes';
-
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<CandidateResumes />} />
-        <Route path="/candidates/resumes" element={<CandidateResumes />} />
-      </Routes>
-    </Router>
-=======
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import Login from './pages/Login';
 import Jobs from './pages/Jobs';
 import SavedJobs from './pages/SavedJobs';
+import CandidateResumes from './components/CandidateResumes';
 
+// Private route component
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/" />;
 };
 
+// Navbar component
 function Navbar() {
   const location = useLocation();
-  if (location.pathname === '/') return null;
+  if (location.pathname === '/') return null; // Hide navbar on login page
 
   return (
     <nav style={{
@@ -60,10 +50,10 @@ function Navbar() {
         }}>Logout</button>
       </div>
     </nav>
->>>>>>> origin/jobprotelitem
   );
 }
 
+// Main App component
 function App() {
   return (
     <Router>
@@ -72,6 +62,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/jobs" element={<PrivateRoute><Jobs /></PrivateRoute>} />
         <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
+        <Route path="/candidates/resumes" element={<CandidateResumes />} />
       </Routes>
     </Router>
   );
