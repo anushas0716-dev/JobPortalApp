@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">{{ job.title }}</h2>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('edit_job', job_id=job.id) }}" class="btn btn-outline-primary">
+            <i class="fas fa-edit me-1"></i>Edit
+        </a>
+        <a href="{{ url_for('job_applicants', job_id=job.id) }}" class="btn btn-outline-info">
+            <i class="fas fa-users me-1"></i>Applicants ({{ job.applications|length }})
+        </a>
+        <a href="{{ url_for('list_jobs') }}" class="btn btn-outline-secondary">Back</a>
+    </div>
+</div>
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">Job Description</div>
+            <div class="card-body">
+                <p style="white-space: pre-wrap;">{{ job.description }}</p>
+            </div>
+        </div>
+        {% if job.required_skills %}
+        <div class="card">
+            <div class="card-header">Required Skills</div>
+            <div class="card-body">
+                {% for skill in job.skills_list() %}
+                <span class="badge bg-primary me-1 mb-1 py-2 px-3">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Job Info</div>
+            <div class="card-body">
+                {% set status_colors = {'Draft': 'secondary', 'Active': 'success', 'Closed': 'danger', 'Expired': 'warning'} %}
+                <div class="mb-3">
+                    <span class="badge bg-{{ status_colors.get(job.status, 'secondary') }} fs-6">{{ job.status }}</span>
+                </div>
+                <table class="table table-borderless table-sm">
+                    <tr><td class="text-muted">Experience</td><td>{{ job.experience_level or '—' }}</td></tr>
+                    <tr><td class="text-muted">Employment</td><td>{{ job.employment_type or '—' }}</td></tr>
+                    <tr><td class="text-muted">Work Mode</td><td>{{ job.work_mode or '—' }}</td></tr>
+                    <tr><td class="text-muted">Openings</td><td>{{ job.num_openings }}</td></tr>
+                    {% if job.salary_min and job.salary_max %}
+                    <tr><td class="text-muted">Salary</td>
+                        <td>₹{{ "%.0f"|format(job.salary_min/1000) }}K – ₹{{ "%.0f"|format(job.salary_max/1000) }}K/yr</td>
+                    </tr>
+                    {% endif %}
+                    {% if job.application_deadline %}
+                    <tr><td class="text-muted">Deadline</td><td>{{ job.application_deadline.strftime('%d %b %Y') }}</td></tr>
+                    {% endif %}
+                    <tr><td class="text-muted">Posted</td><td>{{ job.created_at.strftime('%d %b %Y') }}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

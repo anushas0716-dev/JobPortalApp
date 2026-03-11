@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ candidate.full_name }} - Profile{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">Candidate Profile</h2>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body pt-4">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center
+                     justify-content-center mx-auto mb-3"
+                     style="width:80px;height:80px;font-size:2rem;font-weight:700;">
+                    {{ candidate.full_name[0].upper() }}
+                </div>
+                <h5 class="fw-bold">{{ candidate.full_name }}</h5>
+                {% if candidate.current_role %}
+                <p class="text-muted mb-1">{{ candidate.current_role }}</p>
+                {% endif %}
+                {% if candidate.is_open_to_work %}
+                <span class="badge bg-success"><i class="fas fa-circle me-1" style="font-size:0.6rem"></i>Open to Work</span>
+                {% endif %}
+                <hr>
+                <div class="text-start small">
+                    {% if candidate.email %}
+                    <p class="mb-1"><i class="fas fa-envelope me-2 text-muted"></i>{{ candidate.email }}</p>
+                    {% endif %}
+                    {% if candidate.phone %}
+                    <p class="mb-1"><i class="fas fa-phone me-2 text-muted"></i>{{ candidate.phone }}</p>
+                    {% endif %}
+                    {% if candidate.location %}
+                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-muted"></i>{{ candidate.location }}</p>
+                    {% endif %}
+                    {% if candidate.linkedin_url %}
+                    <p class="mb-1">
+                        <i class="fab fa-linkedin me-2 text-muted"></i>
+                        <a href="{{ candidate.linkedin_url }}" target="_blank">LinkedIn Profile</a>
+                    </p>
+                    {% endif %}
+                    {% if candidate.experience_years %}
+                    <p class="mb-1"><i class="fas fa-chart-line me-2 text-muted"></i>{{ candidate.experience_years }} years experience</p>
+                    {% endif %}
+                    {% if candidate.education %}
+                    <p class="mb-1"><i class="fas fa-graduation-cap me-2 text-muted"></i>{{ candidate.education }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        {% if candidate.bio %}
+        <div class="card mb-3">
+            <div class="card-header">About</div>
+            <div class="card-body">
+                <p>{{ candidate.bio }}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% if candidate.skills %}
+        <div class="card">
+            <div class="card-header">Skills</div>
+            <div class="card-body">
+                {% for skill in candidate.skills_list() %}
+                <span class="badge bg-primary me-1 mb-1 py-2 px-3">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
