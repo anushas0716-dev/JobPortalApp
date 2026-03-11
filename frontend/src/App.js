@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Jobs from './pages/Jobs';
 import SavedJobs from './pages/SavedJobs';
 import ResumeUpload from './pages/ResumeUpload';
+import NotificationsPage, { NotificationBell } from './pages/Notifications';
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
@@ -13,6 +14,18 @@ const PrivateRoute = ({ children }) => {
 function Navbar() {
   const location = useLocation();
   if (location.pathname === '/') return null;
+
+  const navLink = (to, label) => (
+    <Link to={to} style={{
+      padding: '8px 18px', borderRadius: '8px', textDecoration: 'none',
+      fontFamily: "'Syne', sans-serif", fontSize: '13px', fontWeight: '700',
+      background: location.pathname === to ? '#ff6b35' : 'transparent',
+      color: location.pathname === to ? '#fff' : '#555',
+      border: '1px solid',
+      borderColor: location.pathname === to ? '#ff6b35' : '#222',
+      transition: 'all .15s'
+    }}>{label}</Link>
+  );
 
   return (
     <nav style={{
@@ -31,41 +44,13 @@ function Navbar() {
         }}>JobPortal</span>
       </div>
 
-      <div style={{ display: 'flex', gap: '8px' }}>
-        {/* Jobs */}
-        <Link to="/jobs" style={{
-          padding: '8px 18px', borderRadius: '8px', textDecoration: 'none',
-          fontFamily: "'Syne', sans-serif", fontSize: '13px', fontWeight: '700',
-          background: location.pathname === '/jobs' ? '#ff6b35' : 'transparent',
-          color: location.pathname === '/jobs' ? '#fff' : '#555',
-          border: '1px solid',
-          borderColor: location.pathname === '/jobs' ? '#ff6b35' : '#222',
-          transition: 'all .15s'
-        }}>Jobs</Link>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        {navLink('/jobs', 'Jobs')}
+        {navLink('/saved-jobs', '♥ Saved')}
+        {navLink('/resumes', '📄 Resumes')}
+        {navLink('/notifications', '🔔 Notifications')}
 
-        {/* Saved Jobs */}
-        <Link to="/saved-jobs" style={{
-          padding: '8px 18px', borderRadius: '8px', textDecoration: 'none',
-          fontFamily: "'Syne', sans-serif", fontSize: '13px', fontWeight: '700',
-          background: location.pathname === '/saved-jobs' ? '#ff6b35' : 'transparent',
-          color: location.pathname === '/saved-jobs' ? '#fff' : '#555',
-          border: '1px solid',
-          borderColor: location.pathname === '/saved-jobs' ? '#ff6b35' : '#222',
-          transition: 'all .15s'
-        }}>♥ Saved</Link>
 
-        {/* Resumes ← NEW */}
-        <Link to="/resumes" style={{
-          padding: '8px 18px', borderRadius: '8px', textDecoration: 'none',
-          fontFamily: "'Syne', sans-serif", fontSize: '13px', fontWeight: '700',
-          background: location.pathname === '/resumes' ? '#ff6b35' : 'transparent',
-          color: location.pathname === '/resumes' ? '#fff' : '#555',
-          border: '1px solid',
-          borderColor: location.pathname === '/resumes' ? '#ff6b35' : '#222',
-          transition: 'all .15s'
-        }}>📄 Resumes</Link>
-
-        {/* Logout */}
         <button
           onClick={() => { localStorage.clear(); window.location.href = '/'; }}
           style={{
@@ -84,10 +69,11 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/"           element={<Login />} />
-        <Route path="/jobs"       element={<PrivateRoute><Jobs /></PrivateRoute>} />
-        <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
-        <Route path="/resumes"    element={<PrivateRoute><ResumeUpload /></PrivateRoute>} />
+        <Route path="/"               element={<Login />} />
+        <Route path="/jobs"           element={<PrivateRoute><Jobs /></PrivateRoute>} />
+        <Route path="/saved-jobs"     element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
+        <Route path="/resumes"        element={<PrivateRoute><ResumeUpload /></PrivateRoute>} />
+        <Route path="/notifications"  element={<PrivateRoute><NotificationsPage /></PrivateRoute>} />
       </Routes>
     </Router>
   );

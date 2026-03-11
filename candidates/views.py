@@ -78,7 +78,6 @@ class WorkExperienceViewSet(viewsets.ModelViewSet):
         candidate = CandidateProfile.objects.get(user=self.request.user)
         serializer.save(candidate=candidate)
 
-
 class ResumeSkillViewSet(viewsets.ModelViewSet):
     serializer_class   = ResumeSkillSerializer
     permission_classes = [IsAuthenticated]
@@ -88,8 +87,10 @@ class ResumeSkillViewSet(viewsets.ModelViewSet):
         return ResumeSkill.objects.filter(candidate=candidate)
 
     def perform_create(self, serializer):
+        from notifications.utils import notify_candidate_new_matching_jobs
         candidate = CandidateProfile.objects.get(user=self.request.user)
         serializer.save(candidate=candidate)
+        notify_candidate_new_matching_jobs(candidate)
 
 
 class CandidateResumeViewSet(viewsets.ModelViewSet):
