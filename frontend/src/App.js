@@ -1,6 +1,13 @@
-﻿import React from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import Login from './pages/Login';
+import CandidateRegistration from './pages/CandidateRegistration';
+import ForgotPassword from './pages/ForgotPassword';
+import OtpVerification from './pages/OtpVerification';
+import ResetPassword from './pages/ResetPassword';
+import CandidateDashboard from './pages/CandidateDashboard';
+import CandidateProfile from './pages/CandidateProfile';
+import ProfileSettings from './pages/ProfileSettings';
 import Jobs from './pages/Jobs';
 import SavedJobs from './pages/SavedJobs';
 import CandidateResumes from './components/CandidateResumes';
@@ -13,7 +20,14 @@ const PrivateRoute = ({ children }) => {
 
 function Navbar() {
   const location = useLocation();
-  if (location.pathname === '/') return null;
+  const hiddenRoutes = new Set([
+    '/',
+    '/register',
+    '/forgot-password',
+    '/otp-verification',
+    '/reset-password',
+  ]);
+  if (hiddenRoutes.has(location.pathname)) return null;
 
   return (
     <nav style={{
@@ -44,6 +58,34 @@ function Navbar() {
       </div>
 
       <div style={{ display: 'flex', gap: '8px' }}>
+        <Link to="/candidate-dashboard" style={{
+          padding: '8px 18px',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          fontFamily: "'Syne', sans-serif",
+          fontSize: '13px',
+          fontWeight: '700',
+          background: location.pathname === '/candidate-dashboard' ? '#ff6b35' : 'transparent',
+          color: location.pathname === '/candidate-dashboard' ? '#fff' : '#555',
+          border: '1px solid',
+          borderColor: location.pathname === '/candidate-dashboard' ? '#ff6b35' : '#222',
+          transition: 'all .15s'
+        }}>Dashboard</Link>
+
+        <Link to="/candidate-profile" style={{
+          padding: '8px 18px',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          fontFamily: "'Syne', sans-serif",
+          fontSize: '13px',
+          fontWeight: '700',
+          background: location.pathname === '/candidate-profile' ? '#ff6b35' : 'transparent',
+          color: location.pathname === '/candidate-profile' ? '#fff' : '#555',
+          border: '1px solid',
+          borderColor: location.pathname === '/candidate-profile' ? '#ff6b35' : '#222',
+          transition: 'all .15s'
+        }}>Profile</Link>
+
         <Link to="/jobs" style={{
           padding: '8px 18px',
           borderRadius: '8px',
@@ -86,6 +128,20 @@ function Navbar() {
           transition: 'all .15s'
         }}>📄 Resumes</Link>
 
+        <Link to="/profile-settings" style={{
+          padding: '8px 18px',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          fontFamily: "'Syne', sans-serif",
+          fontSize: '13px',
+          fontWeight: '700',
+          background: location.pathname === '/profile-settings' ? '#ff6b35' : 'transparent',
+          color: location.pathname === '/profile-settings' ? '#fff' : '#555',
+          border: '1px solid',
+          borderColor: location.pathname === '/profile-settings' ? '#ff6b35' : '#222',
+          transition: 'all .15s'
+        }}>Settings</Link>
+
         <button
           onClick={() => { localStorage.clear(); window.location.href = '/'; }}
           style={{
@@ -113,6 +169,13 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<CandidateRegistration />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/otp-verification" element={<OtpVerification />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/candidate-dashboard" element={<PrivateRoute><CandidateDashboard /></PrivateRoute>} />
+        <Route path="/candidate-profile" element={<PrivateRoute><CandidateProfile /></PrivateRoute>} />
+        <Route path="/profile-settings" element={<PrivateRoute><ProfileSettings /></PrivateRoute>} />
         <Route path="/jobs" element={<PrivateRoute><Jobs /></PrivateRoute>} />
         <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
         <Route path="/candidates/resumes" element={<CandidateResumes />} />

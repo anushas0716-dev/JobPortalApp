@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const BASE = "http://127.0.0.1:8000";
 const API  = `${BASE}/api`;
@@ -45,16 +45,16 @@ const S = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Nunito:wght@300;400;500;600;700&display=swap');
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg:#f0f4f8; --white:#ffffff; --surface:#f8fafc; --border:#e2e8f0; --border2:#cbd5e1;
-  --blue:#3b82f6; --blue-lt:#eff6ff; --blue-dk:#1d4ed8;
-  --teal:#0d9488; --teal-lt:#f0fdfa;
-  --orange:#f97316; --orange-lt:#fff7ed;
-  --text:#0f172a; --muted:#64748b; --light:#94a3b8;
+  --bg:#f3f5f7; --white:#ffffff; --surface:#f8fafc; --border:#e5e7eb; --border2:#d1d5db;
+  --blue:#ff6b35; --blue-lt:#fff7ed; --blue-dk:#c2410c;
+  --teal:#0f766e; --teal-lt:#ecfdf5;
+  --orange:#f59e0b; --orange-lt:#fff7ed;
+  --text:#111827; --muted:#6b7280; --light:#9ca3af;
   --danger:#ef4444; --danger-lt:#fef2f2;
   --success:#10b981; --success-lt:#f0fdf4;
   --r:14px; --font:'Nunito',sans-serif; --head:'Fraunces',serif;
-  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
-  --shadow-lg:0 8px 32px rgba(0,0,0,.1);
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 8px 20px rgba(15,23,42,.08);
+  --shadow-lg:0 10px 28px rgba(15,23,42,.12);
 }
 body { background:var(--bg); font-family:var(--font); color:var(--text); }
 .shell { min-height:100vh; }
@@ -88,7 +88,7 @@ body { background:var(--bg); font-family:var(--font); color:var(--text); }
 .sb-hero { position:relative; padding-bottom:1.5rem; }
 .sb-cover {
   height:90px;
-  background:linear-gradient(135deg,#3b82f6 0%,#0d9488 50%,#6366f1 100%);
+  background:linear-gradient(135deg,#ff6b35 0%,#f59e0b 50%,#14b8a6 100%);
   position:relative; overflow:hidden;
 }
 .sb-cover::after {
@@ -111,7 +111,7 @@ body { background:var(--bg); font-family:var(--font); color:var(--text); }
 .sb-meta-row { display:flex; align-items:center; justify-content:center; gap:.4rem; font-size:.76rem; color:var(--muted); }
 .sb-meta-row strong { color:var(--text); font-weight:600; }
 .sb-chips { display:flex; flex-wrap:wrap; gap:.3rem; justify-content:center; padding-bottom:.5rem; }
-.sb-chip { font-size:.68rem; padding:.18rem .55rem; border-radius:20px; background:var(--blue-lt); color:var(--blue-dk); border:1px solid #bfdbfe; font-weight:600; }
+.sb-chip { font-size:.68rem; padding:.18rem .55rem; border-radius:20px; background:var(--blue-lt); color:var(--blue-dk); border:1px solid #fed7aa; font-weight:600; }
 .nav { border-top:1px solid var(--border); padding:.4rem 0; }
 .nav-item {
   display:flex; align-items:center; gap:.65rem; width:100%;
