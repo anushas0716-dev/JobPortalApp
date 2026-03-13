@@ -404,9 +404,9 @@ function ResumeCard({ resume, onSetDefault, onDelete }) {
 //  STYLES
 // ═══════════════════════════════════════════════════════════════
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'Nunito',sans-serif; background:#f7f6f2; color:#111; }
+body { font-family:'Nunito',sans-serif; background:#f3f5f7; color:#111827; }
 
 .ru-toasts { position:fixed; top:18px; right:18px; z-index:9999; display:flex; flex-direction:column; gap:8px; }
 .ru-toast { padding:11px 18px; border-radius:10px; font-size:13.5px; font-weight:700; animation:toastIn .25s ease; box-shadow:0 4px 16px rgba(0,0,0,.08); }
@@ -418,78 +418,78 @@ body { font-family:'Nunito',sans-serif; background:#f7f6f2; color:#111; }
 .ru-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:16px; }
 .ru-header-left { display:flex; align-items:center; gap:14px; }
 .ru-header-icon { font-size:36px; }
-.ru-title { font-family:'DM Serif Display',serif; font-size:28px; color:#111; letter-spacing:-.3px; }
-.ru-subtitle { font-size:13px; color:#aaa; margin-top:3px; }
+.ru-title { font-family:'Fraunces',serif; font-size:28px; color:#111827; letter-spacing:-.3px; }
+.ru-subtitle { font-size:13px; color:#6b7280; margin-top:3px; }
 .ru-stats { display:flex; gap:10px; }
-.ru-stat { background:#fff; border:1.5px solid #e8e4de; border-radius:12px; padding:12px 20px; text-align:center; min-width:80px; }
-.ru-stat-n { font-family:'DM Serif Display',serif; font-size:22px; color:#111; }
-.ru-stat-l { font-size:11px; color:#aaa; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+.ru-stat { background:#fff; border:1.5px solid #e5e7eb; border-radius:12px; padding:12px 20px; text-align:center; min-width:80px; }
+.ru-stat-n { font-family:'Fraunces',serif; font-size:22px; color:#111827; }
+.ru-stat-l { font-size:11px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
 
 .ru-body { display:flex; gap:20px; align-items:flex-start; }
 
-.ru-upload-panel { width:320px; flex-shrink:0; background:#fff; border:1.5px solid #e8e4de; border-radius:16px; padding:22px; display:flex; flex-direction:column; gap:18px; position:sticky; top:24px; }
-.ru-panel-title { font-family:'DM Serif Display',serif; font-size:18px; color:#111; }
+.ru-upload-panel { width:320px; flex-shrink:0; background:#fff; border:1.5px solid #e5e7eb; border-radius:16px; padding:22px; display:flex; flex-direction:column; gap:18px; position:sticky; top:24px; }
+.ru-panel-title { font-family:'Fraunces',serif; font-size:18px; color:#111827; }
 
-.ru-dropzone { border:2px dashed #e8e4de; border-radius:13px; padding:28px 20px; text-align:center; cursor:pointer; transition:all .2s; background:#faf9f6; display:flex; flex-direction:column; align-items:center; gap:8px; min-height:160px; justify-content:center; }
-.ru-dropzone:hover,.ru-dropzone.drag-over { border-color:#c9a96e; background:#fffdf8; }
-.ru-dropzone.has-file { cursor:default; border-style:solid; border-color:#c9a96e; background:#fffdf8; }
+.ru-dropzone { border:2px dashed #e5e7eb; border-radius:13px; padding:28px 20px; text-align:center; cursor:pointer; transition:all .2s; background:#f8fafc; display:flex; flex-direction:column; align-items:center; gap:8px; min-height:160px; justify-content:center; }
+.ru-dropzone:hover,.ru-dropzone.drag-over { border-color:#ff6b35; background:#fff7ed; }
+.ru-dropzone.has-file { cursor:default; border-style:solid; border-color:#ff6b35; background:#fff7ed; }
 .ru-drop-icon { font-size:32px; }
-.ru-drop-title { font-family:'DM Serif Display',serif; font-size:15px; color:#111; }
-.ru-drop-sub { font-size:13px; color:#aaa; }
-.ru-drop-hint { font-size:11.5px; color:#bbb; background:#f0ede8; padding:4px 12px; border-radius:20px; }
+.ru-drop-title { font-family:'Fraunces',serif; font-size:15px; color:#111827; }
+.ru-drop-sub { font-size:13px; color:#6b7280; }
+.ru-drop-hint { font-size:11.5px; color:#9ca3af; background:#fff7ed; padding:4px 12px; border-radius:20px; }
 
 .ru-file-preview { display:flex; align-items:center; gap:12px; width:100%; text-align:left; }
 .ru-file-icon { font-size:32px; flex-shrink:0; }
 .ru-file-info { flex:1; min-width:0; }
-.ru-file-name { font-size:13.5px; font-weight:700; color:#111; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.ru-file-size { font-size:12px; color:#aaa; margin-top:2px; }
+.ru-file-name { font-size:13.5px; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ru-file-size { font-size:12px; color:#6b7280; margin-top:2px; }
 .ru-file-remove { background:#fef2f2; border:none; color:#ef4444; cursor:pointer; width:26px; height:26px; border-radius:6px; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 
 .ru-field { display:flex; flex-direction:column; gap:6px; }
-.ru-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:#bbb; }
-.ru-input { padding:11px 13px; background:#f7f6f2; border:1.5px solid #e8e4de; border-radius:10px; font-family:'Nunito',sans-serif; font-size:13.5px; color:#111; outline:none; transition:border-color .15s; }
-.ru-input:focus { border-color:#c9a96e; background:#fff; }
-.ru-input::placeholder { color:#ccc; }
+.ru-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:#9ca3af; }
+.ru-input { padding:11px 13px; background:#f8fafc; border:1.5px solid #e5e7eb; border-radius:10px; font-family:'Nunito',sans-serif; font-size:13.5px; color:#111827; outline:none; transition:border-color .15s; }
+.ru-input:focus { border-color:#ff6b35; background:#fff; }
+.ru-input::placeholder { color:#cbd5e1; }
 
-.ru-upload-btn { width:100%; padding:13px; background:#111; color:#fff; border:none; border-radius:11px; cursor:pointer; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; transition:background .15s; display:flex; align-items:center; justify-content:center; gap:8px; }
-.ru-upload-btn:hover:not(:disabled) { background:#333; }
+.ru-upload-btn { width:100%; padding:13px; background:#ff6b35; color:#fff; border:none; border-radius:11px; cursor:pointer; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; transition:background .15s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.ru-upload-btn:hover:not(:disabled) { background:#ea580c; }
 .ru-upload-btn:disabled { background:#e8e4de; color:#bbb; cursor:not-allowed; }
 .ru-spin { display:inline-block; animation:spin .7s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
 
-.ru-tips { background:#faf9f6; border:1.5px solid #e8e4de; border-radius:11px; padding:14px 16px; }
-.ru-tips-title { font-size:13px; font-weight:800; color:#555; margin-bottom:8px; }
+.ru-tips { background:#fff7ed; border:1.5px solid #fed7aa; border-radius:11px; padding:14px 16px; }
+.ru-tips-title { font-size:13px; font-weight:800; color:#7c2d12; margin-bottom:8px; }
 .ru-tips-list { list-style:none; display:flex; flex-direction:column; gap:6px; }
-.ru-tips-list li { font-size:12.5px; color:#aaa; padding-left:14px; position:relative; }
-.ru-tips-list li::before { content:'→'; position:absolute; left:0; color:#c9a96e; }
+.ru-tips-list li { font-size:12.5px; color:#6b7280; padding-left:14px; position:relative; }
+.ru-tips-list li::before { content:'→'; position:absolute; left:0; color:#ff6b35; }
 
 .ru-list-panel { flex:1; min-width:0; }
 .ru-list-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-.ru-count { background:#e8e4de; color:#888; font-size:12px; font-weight:800; padding:3px 10px; border-radius:20px; }
-.ru-refresh-btn { background:none; border:1.5px solid #e8e4de; padding:5px 12px; border-radius:8px; font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; color:#aaa; cursor:pointer; transition:all .15s; }
-.ru-refresh-btn:hover { border-color:#c9a96e; color:#c9a96e; }
+.ru-count { background:#fff7ed; color:#c2410c; font-size:12px; font-weight:800; padding:3px 10px; border-radius:20px; }
+.ru-refresh-btn { background:none; border:1.5px solid #e5e7eb; padding:5px 12px; border-radius:8px; font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; color:#6b7280; cursor:pointer; transition:all .15s; }
+.ru-refresh-btn:hover { border-color:#ff6b35; color:#ff6b35; }
 
 .ru-skels { display:flex; flex-direction:column; gap:10px; }
-.ru-skel { height:90px; background:linear-gradient(90deg,#f0ede8 25%,#faf9f7 50%,#f0ede8 75%); background-size:200% 100%; border-radius:13px; animation:shimmer 1.4s infinite; }
+.ru-skel { height:90px; background:linear-gradient(90deg,#f1f5f9 25%,#ffffff 50%,#f1f5f9 75%); background-size:200% 100%; border-radius:13px; animation:shimmer 1.4s infinite; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-.ru-empty { text-align:center; padding:60px 20px; color:#bbb; }
+.ru-empty { text-align:center; padding:60px 20px; color:#9ca3af; }
 .ru-empty-icon { font-size:44px; margin-bottom:12px; opacity:.4; }
-.ru-empty h3 { font-family:'DM Serif Display',serif; font-size:18px; color:#999; margin-bottom:6px; }
+.ru-empty h3 { font-family:'Fraunces',serif; font-size:18px; color:#6b7280; margin-bottom:6px; }
 .ru-empty p { font-size:13.5px; }
 
 .ru-list { display:flex; flex-direction:column; gap:12px; }
-.ru-card { background:#fff; border:1.5px solid #e8e4de; border-radius:14px; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:14px; transition:all .2s; flex-wrap:wrap; }
-.ru-card:hover { border-color:#c9a96e; box-shadow:0 4px 18px rgba(201,169,110,.12); }
-.ru-card.default { border-color:#c9a96e; background:#fffdf8; }
+.ru-card { background:#fff; border:1.5px solid #e5e7eb; border-radius:14px; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:14px; transition:all .2s; flex-wrap:wrap; }
+.ru-card:hover { border-color:#ff6b35; box-shadow:0 4px 18px rgba(255,107,53,.12); }
+.ru-card.default { border-color:#ff6b35; background:#fff7ed; }
 .ru-card-left { display:flex; align-items:center; gap:14px; flex:1; min-width:0; }
 .ru-card-icon { font-size:32px; flex-shrink:0; }
-.ru-card-title { font-family:'DM Serif Display',serif; font-size:15.5px; color:#111; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.ru-default-badge { background:#fef3c7; color:#c9a96e; font-family:'Nunito',sans-serif; font-size:11px; font-weight:800; padding:2px 9px; border-radius:20px; border:1px solid #fde68a; }
-.ru-card-meta { font-size:12px; color:#bbb; margin-top:4px; display:flex; gap:6px; }
+.ru-card-title { font-family:'Fraunces',serif; font-size:15.5px; color:#111827; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.ru-default-badge { background:#ffedd5; color:#c2410c; font-family:'Nunito',sans-serif; font-size:11px; font-weight:800; padding:2px 9px; border-radius:20px; border:1px solid #fdba74; }
+.ru-card-meta { font-size:12px; color:#6b7280; margin-top:4px; display:flex; gap:6px; }
 .ru-card-actions { display:flex; gap:6px; flex-wrap:wrap; flex-shrink:0; }
-.ru-action-btn { padding:6px 13px; border-radius:8px; border:1.5px solid #e8e4de; background:#f7f6f2; color:#555; font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; text-decoration:none; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
-.ru-action-btn:hover { background:#eae8e3; }
+.ru-action-btn { padding:6px 13px; border-radius:8px; border:1.5px solid #e5e7eb; background:#f8fafc; color:#374151; font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; text-decoration:none; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+.ru-action-btn:hover { background:#fff7ed; }
 .ru-action-btn.danger { color:#ef4444; border-color:#fecaca; background:#fff; }
 .ru-action-btn.danger:hover { background:#fef2f2; }
 
