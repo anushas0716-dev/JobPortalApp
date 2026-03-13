@@ -1,0 +1,63 @@
+{# templates/applications/browse_jobs.html #}
+{% extends "base.html" %}
+
+{% block title %}Browse Jobs – JobPortal{% endblock %}
+
+{% block content %}
+
+{# ── HERO ── #}
+<header class="hero">
+  <div class="container">
+    <span class="eyebrow">FR-10 · Apply for Job</span>
+    <h1>Find Your <span class="accent">Next Role</span></h1>
+    <p class="hero-sub">{{ jobs|length }} positions open · Apply instantly with your saved profile</p>
+  </div>
+  <div class="orb orb--tr"></div>
+</header>
+
+{# ── JOB LISTINGS ── #}
+<main class="container pb-60">
+  <div class="jobs-grid">
+    {% for job in jobs %}
+    {% set is_applied = job.id in applied_ids %}
+    <article class="job-card {% if is_applied %}job-card--applied{% endif %}"
+             style="animation-delay:{{ loop.index0 * 0.07 }}s">
+
+      <div class="job-card__head">
+        <div class="logo-badge" style="--lc:{{ job.color }}">{{ job.logo }}</div>
+        <div class="job-card__info">
+          <h2 class="job-card__title">{{ job.title }}</h2>
+          <p class="job-card__sub">
+            {{ job.company }} &nbsp;·&nbsp;
+            <span class="clr-teal">{{ job.location }}</span> &nbsp;·&nbsp;
+            <span class="clr-amber">{{ job.salary }}</span>
+          </p>
+        </div>
+        {% if is_applied %}
+          <span class="applied-badge">✓ Applied</span>
+        {% endif %}
+      </div>
+
+      <div class="tag-row">
+        {% for tag in job.tags %}
+          <span class="tag">{{ tag }}</span>
+        {% endfor %}
+        <span class="tag tag--date">Posted {{ job.posted }}</span>
+      </div>
+
+      <div class="job-card__foot">
+        {% if is_applied %}
+          <a href="{{ url_for('applications.my_applications') }}"
+             class="btn btn--ghost btn--sm">View Status →</a>
+        {% else %}
+          <a href="{{ url_for('applications.apply', job_id=job.id) }}"
+             class="btn btn--primary btn--sm">Apply Now →</a>
+        {% endif %}
+      </div>
+
+    </article>
+    {% endfor %}
+  </div>
+</main>
+
+{% endblock %}

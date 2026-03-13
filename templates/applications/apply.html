@@ -1,0 +1,224 @@
+{# templates/applications/apply.html #}
+{% extends "base.html" %}
+
+{% block title %}Apply – {{ job.title }} – JobPortal{% endblock %}
+
+{% block content %}
+<main class="container container--narrow py-56">
+
+  {# ── Breadcrumb ── #}
+  <nav class="breadcrumb">
+    <a href="{{ url_for('applications.browse_jobs') }}">Jobs</a>
+    <span>›</span>
+    <span>{{ job.title }}</span>
+    <span>›</span>
+    <span>Apply</span>
+  </nav>
+
+  {# ════════════════════════════════════════
+     DUPLICATE STATE  (FR-10)
+  ════════════════════════════════════════ #}
+  {% if already %}
+  <div class="dup-card">
+    <div class="dup-icon">⚠️</div>
+    <div class="dup-body">
+      <h2>Already Applied</h2>
+      <p>You've already submitted an application for
+         <strong>{{ job.title }}</strong> at {{ job.company }}.
+         Duplicate applications are not permitted.</p>
+      <div class="btn-row">
+        <a href="{{ url_for('applications.my_applications') }}" class="btn btn--primary">
+          Track My Application →
+        </a>
+        <a href="{{ url_for('applications.browse_jobs') }}" class="btn btn--ghost">
+          Browse Other Jobs
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {% else %}
+  {# ════════════════════════════════════════
+     NORMAL APPLY FORM  (FR-10)
+  ════════════════════════════════════════ #}
+
+  {# Job summary bar #}
+  <div class="apply-summary">
+    <div class="logo-badge logo-badge--lg" style="--lc:{{ job.color }}">{{ job.logo }}</div>
+    <div>
+      <h1 class="apply-summary__title">{{ job.title }}</h1>
+      <p class="apply-summary__sub">
+        {{ job.company }} &nbsp;·&nbsp; {{ job.location }} &nbsp;·&nbsp;
+        <span class="clr-amber">{{ job.salary }}</span>
+      </p>
+    </div>
+  </div>
+
+  {# Application form #}
+  <form class="apply-form" id="applyForm"
+        method="POST"
+        action="{{ url_for('applications.apply', job_id=job.id) }}">
+
+    {# ── Section 1: Profile & Resume ── #}
+    <div class="form-card">
+      <h3 class="form-card__title">📋 Your Profile &amp; Resume</h3>
+
+      <label class="profile-toggle" id="profileToggle">
+        <input type="checkbox" name="use_profile" id="useProfCb" checked/>
+        <div class="profile-toggle__row" id="profileRow">
+          <div class="toggle-check" id="toggleCheck">✓</div>
+          <div class="profile-toggle__text">
+            <strong>Use Saved Profile &amp; Resume</strong>
+            <span>Your latest resume and profile details will be attached</span>
+          </div>
+        </div>
+      </label>
+
+      <div class="resume-preview" id="resumePreview">
+        <span class="resume-pill">
+          📄 My_Resume_2026.pdf
+          <span class="resume-date">Updated Feb 2026</span>
+        </span>
+      </div>
+    </div>
+
+    {# ── Section 2: Cover Letter (Optional) ── #}
+    <div class="form-card">
+      <h3 class="form-card__title">
+        ✉️ Cover Letter
+        <span class="opt-tag">OPTIONAL</span>
+      </h3>
+      <p class="form-card__hint">
+        A personalised message increases your chances of being noticed.
+      </p>
+      <textarea
+        name="cover_letter"
+        id="coverLetter"
+        class="cover-ta"
+        rows="6"
+        maxlength="1500"
+        placeholder="Hi, I'm excited to apply for the {{ job.title }} role at {{ job.company }}. I believe my experience in..."></textarea>
+      <div class="char-row">
+        <span id="charCount">0</span> / 1500
+      </div>
+    </div>
+
+    {# ── Submit ── #}
+    <div class="form-actions">
+      <a href="{{ url_for('applications.browse_jobs') }}" class="btn btn--ghost">← Back</a>
+      <button type="submit" class="btn btn--primary btn--lg" id="submitBtn">
+        <span id="btnLabel">Submit Application</span>
+        <span class="btn-spinner" id="btnSpinner" hidden></span>
+      </button>
+    </div>
+
+  </form>
+  {% endif %}
+
+</main>
+
+{# ════════════════════════════════════════
+   SUCCESS MODAL  (FR-10 – Confirmation)
+════════════════════════════════════════ #}
+<div class="modal-overlay" id="successModal" hidden>
+  <div class="modal">
+    <div class="modal-icon">✅</div>
+    <h2>Application Submitted!</h2>
+    <p>
+      Your application for <strong>{{ job.title }}</strong> at
+      {{ job.company }} has been received.<br/>
+      We'll notify you of any updates.
+    </p>
+    <div class="modal-actions">
+      <a href="{{ url_for('applications.my_applications') }}"
+         class="btn btn--primary">Track My Application →</a>
+      <a href="{{ url_for('applications.browse_jobs') }}"
+         class="btn btn--ghost">Browse More Jobs</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* ── Profile toggle ── */
+const cb      = document.getElementById('useProfCb');
+const row     = document.getElementById('profileRow');
+const check   = document.getElementById('toggleCheck');
+const preview = document.getElementById('resumePreview');
+
+document.getElementById('profileToggle').addEventListener('click', function(e){
+  if(e.target.tagName === 'INPUT') return;
+  e.preventDefault();
+  cb.checked = !cb.checked;
+  row.classList.toggle('checked', cb.checked);
+  check.style.opacity = cb.checked ? '1' : '0';
+  if(preview) preview.style.display = cb.checked ? '' : 'none';
+});
+cb.addEventListener('change', function(){
+  row.classList.toggle('checked', cb.checked);
+  check.style.opacity = cb.checked ? '1' : '0';
+  if(preview) preview.style.display = cb.checked ? '' : 'none';
+});
+
+/* ── Char counter ── */
+const ta = document.getElementById('coverLetter');
+const cc = document.getElementById('charCount');
+if(ta && cc){
+  ta.addEventListener('input', function(){
+    cc.textContent = this.value.length;
+    cc.style.color = this.value.length > 1400 ? '#F87171' : '';
+  });
+}
+
+/* ── AJAX submit + confirmation modal (FR-10) ── */
+const form   = document.getElementById('applyForm');
+const modal  = document.getElementById('successModal');
+const btn    = document.getElementById('submitBtn');
+const label  = document.getElementById('btnLabel');
+const spin   = document.getElementById('btnSpinner');
+
+if(form){
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    btn.disabled = true;
+    label.textContent = 'Submitting…';
+    if(spin) spin.hidden = false;
+
+    try {
+      const res  = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new FormData(form)
+      });
+      const data = await res.json();
+
+      if(res.status === 409 || data.duplicate){
+        /* Duplicate – reload to show the warning page */
+        window.location.reload();
+        return;
+      }
+      if(data.success){
+        /* Show confirmation modal (FR-10) */
+        if(modal){ modal.hidden = false; document.body.style.overflow = 'hidden'; }
+      } else {
+        alert(data.message || 'Something went wrong.');
+        btn.disabled = false;
+        label.textContent = 'Submit Application';
+        if(spin) spin.hidden = true;
+      }
+    } catch(err){
+      form.submit(); /* network error – fall back to normal POST */
+    }
+  });
+}
+
+/* Close modal on backdrop click */
+if(modal){
+  modal.addEventListener('click', function(e){
+    if(e.target === modal){ modal.hidden = true; document.body.style.overflow = ''; }
+  });
+}
+</script>
+{% endblock %}

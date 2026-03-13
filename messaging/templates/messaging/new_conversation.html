@@ -1,0 +1,135 @@
+{% extends 'messaging/base.html %}
+
+{% block title %}New Conversation - Job Portal{% endblock %}
+
+{% block content %}
+<div class="col-12" data-candidate-id="{{ candidate.id }}">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-plus me-2"></i>Start New Conversation
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="newConversationForm">
+                        <div class="mb-3">
+                            <label for="employerSelect" class="form-label">Select Employer</label>
+                            <select class="form-select" id="employerSelect" required>
+                                <option value="">Choose an employer to message...</option>
+                                {% for employer in employers %}
+                                    <option value="{{ employer.id }}">
+                                        {{ employer.company.name }} - {{ employer.designation }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="initialMessage" class="form-label">Initial Message</label>
+                            <textarea class="form-control" id="initialMessage" rows="4" 
+                                      placeholder="Introduce yourself and mention why you're reaching out..." 
+                                      maxlength="5000" required></textarea>
+                            <div class="form-text">
+                                <span id="charCount">0</span>/5000 characters
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Tips for a good first message:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Introduce yourself briefly</li>
+                                <li>Mention specific positions or opportunities you're interested in</li>
+                                <li>Be professional and concise</li>
+                                <li>Ask relevant questions about the company or role</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'messaging:inbox' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i>Back to Messages
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-1"></i>Start Conversation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Message Guidelines
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Remember:</strong>
+                        <ul class="mb-0 mt-2 small">
+                            <li>First impressions matter</li>
+                            <li>Employers receive many messages</li>
+                            <li>Be specific about your interests</li>
+                            <li>Check for typos before sending</li>
+                        </ul>
+                    </div>
+                    
+                    <h6>Do's:</h6>
+                    <ul class="small">
+                        <li>✓ Research the company first</li>
+                        <li>✓ Mention specific roles</li>
+                        <li>✓ Keep it professional</li>
+                        <li>✓ Ask thoughtful questions</li>
+                    </ul>
+                    
+                    <h6>Don'ts:</h6>
+                    <ul class="small">
+                        <li>✗ Send generic messages</li>
+                        <li>✗ Use informal language</li>
+                        <li>✗ Make demands</li>
+                        <li>✗ Share personal information</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Character counter
+    const messageInput = document.getElementById('initialMessage');
+    const charCount = document.getElementById('charCount');
+    
+    messageInput.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+        if (this.value.length > 4500) {
+            charCount.classList.add('text-warning');
+        } else {
+            charCount.classList.remove('text-warning');
+        }
+    });
+    
+    // Form submission
+    const newConversationForm = document.getElementById('newConversationForm');
+    newConversationForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const employerId = document.getElementById('employerSelect').value;
+        const message = document.getElementById('initialMessage').value;
+        
+        if (!employerId || !message.trim()) {
+            showAlert('Please fill in all fields', 'danger');
+            return;
+        }
+        
+        createNewConversation(employerId, message);
+    });
+</script>
+{% endblock %}
