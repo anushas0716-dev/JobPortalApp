@@ -11,7 +11,6 @@ A production-ready React dashboard implementing FR-16 from the Job Portal Applic
 - 👤 Profile Completion with animated progress bar
 - 🔔 Notifications with read/unread state
 
----
 
 ## How to Run
 
@@ -21,38 +20,34 @@ Make sure you have these installed:
 - **npm** (comes with Node.js)
 
 Check your versions:
-```bash
+bash
 node -v
 npm -v
 
 
 ### Step 1 — Extract the ZIP
 Unzip the downloaded file:
-```bash
+bash
 unzip jobsphere-dashboard.zip
 cd jobsphere
 
 ### Step 2 — Install Dependencies
-```bash
+bash
 npm install
-```
+
 This downloads all required packages into a `node_modules/` folder.  
 _(Takes ~1–2 minutes on first run)_
 
 ### Step 3 — Start Development Server
-```bash
+bash
 npm start
-```
-The app will open automatically at:
-```
-http://localhost:3000
-```
 
----
+The app will open automatically at:
+http://localhost:3000
+
 
 ## Project Structure
 
-```
 jobsphere/
 ├── public/
 │   └── index.html            # HTML entry point
@@ -73,22 +68,15 @@ jobsphere/
 │       ├── SavedAndRecent.jsx    # FR-16: Saved + Recently viewed
 │       └── NotificationsCard.jsx # FR-16: Notifications
 └── package.json
-```
-
----
-
 ## Build for Production
-```bash
+bash
 npm run build
-```
-Output goes to the `build/` folder — ready to deploy to any static host (Netlify, Vercel, etc.).
 
----
+Output goes to the `build/` folder — ready to deploy to any static host (Netlify, Vercel, etc.).
 
 ## Customizing Data
 All mock data is in `src/data/dashboardData.js`.  
 Edit the arrays to change job listings, notifications, application statuses, etc.
-=======
 # Company Registration Frontend
 
 ## 🎯 Overview
@@ -118,7 +106,7 @@ A modern React frontend for company registration and profile management, built f
 
 ## 📁 Project Structure
 
-```
+
 company-registration/
 ├── public/
 │   └── index.html
@@ -137,7 +125,6 @@ company-registration/
 ├── package.json
 ├── tailwind.config.js
 └── README.md
-```
 
 ## 🛠️ Installation & Setup
 
@@ -146,17 +133,17 @@ company-registration/
 - npm or yarn
 
 ### Installation Steps
-```bash
+bash
 cd company-registration
 npm install
 npm start
-```
+
 
 ### Environment Configuration
 Create a `.env` file in the root:
-```env
+env
 REACT_APP_API_URL=http://localhost:8001/api
-```
+
 
 ## 🎨 Key Components
 
@@ -229,5 +216,4 @@ REACT_APP_API_URL=http://localhost:8001/api
 - **Mobile Responsive**: Works on all screen sizes
 - **Progressive Enhancement**: Graceful degradation
 
----
 ce394b553fba7a911f2cefdeb4d60912302943c0
