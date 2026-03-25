@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPortal API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+        header { background: linear-gradient(135deg, #1e40af, #7c3aed); padding: 40px 20px; text-align: center; }
+        header h1 { font-size: 2.5rem; color: white; margin-bottom: 8px; }
+        header p { color: #bfdbfe; font-size: 1.1rem; }
+        .status-badge { display: inline-block; background: #22c55e; color: white; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; margin-top: 12px; }
+        .container { max-width: 960px; margin: 40px auto; padding: 0 20px; }
+        .section-title { font-size: 1.1rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin: 32px 0 12px; border-left: 4px solid #7c3aed; padding-left: 12px; }
+
+        /* Login buttons row */
+        .login-row { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .login-btn { flex: 1; min-width: 200px; padding: 14px 20px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .login-btn:hover { opacity: 0.85; }
+        .btn-hr  { background: linear-gradient(135deg, #7c3aed, #4f46e5); color: white; }
+        .btn-cand { background: linear-gradient(135deg, #0891b2, #0284c7); color: white; }
+        .btn-logout-top { background: #334155; color: #f87171; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.9rem; }
+
+        /* Logged in bar */
+        .logged-bar { background: #1a2e20; border: 1px solid #22c55e44; border-radius: 10px; padding: 12px 20px; margin-bottom: 16px; display: none; align-items: center; gap: 10px; }
+        .logged-bar.active { display: flex; }
+        .logged-bar span { color: #22c55e; font-weight: 600; flex: 1; }
+
+        .card { background: #1e293b; border-radius: 10px; margin-bottom: 8px; border: 1px solid #334155; display: flex; align-items: center; padding: 14px 20px; gap: 16px; text-decoration: none; color: inherit; transition: background 0.2s; }
+        a.card:hover { background: #273548; cursor: pointer; }
+        .card.hr-link   { border-left: 4px solid #7c3aed; }
+        .card.cand-link { border-left: 4px solid #0891b2; }
+        .card.pub-link  { border-left: 4px solid #22c55e; }
+        a.card.hr-link:hover   { background: #1e1a2e; }
+        a.card.cand-link:hover { background: #1a2535; }
+        a.card.pub-link:hover  { background: #1a2e20; }
+
+        .method { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; min-width: 62px; text-align: center; }
+        .GET   { background: #065f46; color: #6ee7b7; }
+        .POST  { background: #1e3a5f; color: #93c5fd; }
+        .PATCH { background: #713f12; color: #fde68a; }
+        .url  { color: #e2e8f0; font-family: monospace; font-size: 0.9rem; flex: 1; }
+        .desc { color: #94a3b8; font-size: 0.85rem; }
+        .badge { font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; white-space: nowrap; }
+        .badge-hr   { background: #2e1a5e; color: #a78bfa; }
+        .badge-cand { background: #0c2a3a; color: #38bdf8; }
+        .badge-pub  { background: #14532d; color: #4ade80; }
+
+        .tip { background: #1e293b; border: 1px solid #f59e0b55; border-radius: 10px; padding: 14px 20px; margin-bottom: 10px; color: #94a3b8; font-size: 0.9rem; line-height: 2; }
+        .tip span { color: #fbbf24; font-weight: 600; }
+        .footer { text-align: center; padding: 40px; color: #475569; font-size: 0.85rem; }
+
+        /* Modal */
+        .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center; }
+        .modal-overlay.active { display:flex; }
+        .modal { background:#1e293b; border-radius:16px; padding:32px; width:100%; max-width:420px; border:1px solid #334155; }
+        .modal h2 { color:white; margin-bottom:6px; font-size:1.4rem; }
+        .modal p  { color:#94a3b8; font-size:0.9rem; margin-bottom:20px; }
+        .modal input { width:100%; background:#0f172a; border:1px solid #334155; border-radius:8px; padding:12px 14px; color:white; font-size:0.95rem; margin-bottom:12px; outline:none; }
+        .modal input:focus { border-color:#7c3aed; }
+        .modal-btns { display:flex; gap:10px; margin-top:4px; }
+        .btn-do-login { flex:1; color:white; border:none; border-radius:8px; padding:12px; font-size:1rem; font-weight:600; cursor:pointer; }
+        .btn-cancel   { flex:1; background:#334155; color:white; border:none; border-radius:8px; padding:12px; font-size:1rem; cursor:pointer; }
+        .login-status { font-size:0.85rem; margin-top:10px; text-align:center; min-height:20px; }
+        .login-status.success { color:#22c55e; }
+        .login-status.error   { color:#f87171; }
+
+        /* Candidate quick pick */
+        .quick-pick { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+        .qp-btn { background:#0f172a; border:1px solid #334155; color:#94a3b8; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.82rem; }
+        .qp-btn:hover { border-color:#0891b2; color:#38bdf8; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🏢 JobPortal API</h1>
+    <p>HR Resume Filter — Backend Server</p>
+    <span class="status-badge">🟢 Server Running</span>
+</header>
+
+<div class="container">
+
+    <!-- Logged in bar -->
+    <div class="logged-bar" id="loggedBar">
+        <span id="loggedText">✅ Logged in!</span>
+        <button class="btn-logout-top" onclick="doLogout()">Logout</button>
+    </div>
+
+    <!-- Login buttons -->
+    <div class="login-row">
+        <button class="login-btn btn-hr"   onclick="openLogin('hr')">🔐 Login as HR</button>
+        <button class="login-btn btn-cand" onclick="openLogin('candidate')">👤 Login as Candidate</button>
+    </div>
+
+    <div class="tip">
+        <span>🟣 Purple border</span> = HR only &nbsp;|&nbsp;
+        <span style="color:#38bdf8">🔵 Blue border</span> = Candidate only &nbsp;|&nbsp;
+        <span style="color:#4ade80">🟢 Green border</span> = Public (anyone) &nbsp;|&nbsp;
+        Login first, then click <strong>CLICK ↗</strong>
+    </div>
+
+    <!-- PUBLIC -->
+    <div class="section-title">🌐 Public — No Login Needed</div>
+    <a class="card pub-link" href="/api/jobs/" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/jobs/</span>
+        <span class="desc">List all active jobs</span>
+        <span class="badge badge-pub">CLICK ↗</span>
+    </a>
+    <a class="card pub-link" href="/api/jobs/1" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/jobs/1</span>
+        <span class="desc">Get job details (id=1)</span>
+        <span class="badge badge-pub">CLICK ↗</span>
+    </a>
+
+    <!-- HR -->
+    <div class="section-title">🟣 HR Only — Login as HR first</div>
+    <a class="card hr-link" href="/api/hr/filter/1" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/hr/filter/1</span>
+        <span class="desc">Filter &amp; rank all applicants</span>
+        <span class="badge badge-hr">HR CLICK ↗</span>
+    </a>
+    <a class="card hr-link" href="/api/hr/filter/1?min_score=70" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/hr/filter/1?min_score=70</span>
+        <span class="desc">Strong matches only (70%+)</span>
+        <span class="badge badge-hr">HR CLICK ↗</span>
+    </a>
+    <a class="card hr-link" href="/api/hr/filter/1?location=Bangalore" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/hr/filter/1?location=Bangalore</span>
+        <span class="desc">Filter by Bangalore</span>
+        <span class="badge badge-hr">HR CLICK ↗</span>
+    </a>
+    <a class="card hr-link" href="/api/hr/filter/1?sort_by=experience" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/hr/filter/1?sort_by=experience</span>
+        <span class="desc">Sort by experience</span>
+        <span class="badge badge-hr">HR CLICK ↗</span>
+    </a>
+    <a class="card hr-link" href="/api/hr/score/1/1" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/hr/score/1/1</span>
+        <span class="desc">Score resume #1 vs job #1</span>
+        <span class="badge badge-hr">HR CLICK ↗</span>
+    </a>
+    <a class="card hr-link" href="/api/hr/shortlist/1" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/hr/shortlist/1</span>
+        <span class="desc">View shortlisted candidates</span>
+        <span class="badge badge-hr">HR CLICK ↗</span>
+    </a>
+    <div class="card">
+        <span class="method PATCH">PATCH</span><span class="url">/api/hr/application/&lt;id&gt;/status</span>
+        <span class="desc">Shortlist / Reject / Hire — use Postman</span>
+    </div>
+
+    <!-- CANDIDATE -->
+    <div class="section-title">🔵 Candidate Only — Login as Candidate first</div>
+    <a class="card cand-link" href="/api/candidate/profile" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/candidate/profile</span>
+        <span class="desc">View my profile</span>
+        <span class="badge badge-cand">CAND CLICK ↗</span>
+    </a>
+    <a class="card cand-link" href="/api/candidate/applications" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/candidate/applications</span>
+        <span class="desc">View my job applications</span>
+        <span class="badge badge-cand">CAND CLICK ↗</span>
+    </a>
+    <a class="card cand-link" href="/api/resumes/my" target="_blank">
+        <span class="method GET">GET</span><span class="url">/api/resumes/my</span>
+        <span class="desc">View my resumes</span>
+        <span class="badge badge-cand">CAND CLICK ↗</span>
+    </a>
+    <div class="card">
+        <span class="method POST">POST</span><span class="url">/api/candidate/apply</span>
+        <span class="desc">Apply to a job — use Postman</span>
+    </div>
+
+    <!-- SCORING -->
+    <div class="section-title">📊 Scoring System</div>
+    <div class="tip">
+        <span>Skills</span> → 50 pts &nbsp;|&nbsp;
+        <span>Experience</span> → 30 pts &nbsp;|&nbsp;
+        <span>Education</span> → 20 pts &nbsp;|&nbsp;
+        <span>Total</span> → 100 pts<br>
+        🟢 Strong Match: 70–100 &nbsp;&nbsp;
+        🟡 Moderate Match: 40–69 &nbsp;&nbsp;
+        🔴 Weak Match: 0–39
+    </div>
+
+</div>
+
+<div class="footer">JobPortal API © 2026 &nbsp;|&nbsp; Flask + SQLite &nbsp;|&nbsp; Built with Python</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginModal">
+    <div class="modal">
+        <h2 id="modalTitle">🔐 Login</h2>
+        <p id="modalDesc">Enter your credentials</p>
+
+        <!-- Candidate quick select -->
+        <div id="quickPick" style="display:none; margin-bottom:12px;">
+            <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:8px;">Quick select candidate:</p>
+            <div class="quick-pick">
+                <button class="qp-btn" onclick="fillCand('arjun@mail.com')">Arjun</button>
+                <button class="qp-btn" onclick="fillCand('priya@mail.com')">Priya</button>
+                <button class="qp-btn" onclick="fillCand('ravi@mail.com')">Ravi</button>
+                <button class="qp-btn" onclick="fillCand('sneha@mail.com')">Sneha</button>
+                <button class="qp-btn" onclick="fillCand('karan@mail.com')">Karan</button>
+            </div>
+        </div>
+
+        <input type="email"    id="emailInput" placeholder="Email" />
+        <input type="password" id="passInput"  placeholder="Password" value="password123" />
+        <div class="modal-btns">
+            <button class="btn-cancel"   onclick="closeLogin()">Cancel</button>
+            <button class="btn-do-login" id="loginBtnDo" onclick="doLogin()" style="background:#7c3aed;">Login</button>
+        </div>
+        <div class="login-status" id="loginStatus"></div>
+    </div>
+</div>
+
+<script>
+    let currentRole = 'hr';
+
+    function fillCand(email) {
+        document.getElementById('emailInput').value = email;
+    }
+
+    function openLogin(role) {
+        currentRole = role;
+        const modal     = document.getElementById('loginModal');
+        const title     = document.getElementById('modalTitle');
+        const desc      = document.getElementById('modalDesc');
+        const emailInp  = document.getElementById('emailInput');
+        const loginBtn  = document.getElementById('loginBtnDo');
+        const quickPick = document.getElementById('quickPick');
+
+        if (role === 'hr') {
+            title.textContent    = '🔐 Login as HR';
+            desc.textContent     = 'HR account — access resume filter and shortlist';
+            emailInp.value       = 'hr@techcorp.com';
+            loginBtn.style.background = '#7c3aed';
+            quickPick.style.display   = 'none';
+        } else {
+            title.textContent    = '👤 Login as Candidate';
+            desc.textContent     = 'Pick a candidate or type email below';
+            emailInp.value       = 'arjun@mail.com';
+            loginBtn.style.background = '#0891b2';
+            quickPick.style.display   = 'block';
+        }
+
+        document.getElementById('loginStatus').textContent = '';
+        modal.classList.add('active');
+    }
+
+    function closeLogin() {
+        document.getElementById('loginModal').classList.remove('active');
+        document.getElementById('loginStatus').textContent = '';
+    }
+
+    async function doLogin() {
+        const email  = document.getElementById('emailInput').value;
+        const pass   = document.getElementById('passInput').value;
+        const status = document.getElementById('loginStatus');
+        status.textContent = 'Logging in...';
+        status.className   = 'login-status';
+        try {
+            const res  = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password: pass }),
+                credentials: 'include'
+            });
+            const data = await res.json();
+            if (res.ok) {
+                const name = email.split('@')[0];
+                status.textContent = '✅ Login successful! Click the links now.';
+                status.className   = 'login-status success';
+                const bar  = document.getElementById('loggedBar');
+                const text = document.getElementById('loggedText');
+                const role = currentRole === 'hr' ? '🟣 HR' : '🔵 Candidate';
+                text.textContent = `✅ Logged in as ${role} (${email}) — click the matching colored links!`;
+                bar.classList.add('active');
+                setTimeout(closeLogin, 1500);
+            } else {
+                status.textContent = '❌ ' + (data.error || 'Login failed');
+                status.className   = 'login-status error';
+            }
+        } catch(e) {
+            status.textContent = '❌ Cannot connect. Is Flask running?';
+            status.className   = 'login-status error';
+        }
+    }
+
+    async function doLogout() {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+        document.getElementById('loggedBar').classList.remove('active');
+    }
+</script>
+</body>
+</html>

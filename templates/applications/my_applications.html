@@ -1,0 +1,156 @@
+{# templates/applications/my_applications.html #}
+{% extends "base.html" %}
+
+{% block title %}My Applications – JobPortal{% endblock %}
+
+{% block content %}
+
+{# ── HEADER ── #}
+<header class="hero hero--compact">
+  <div class="container">
+    <span class="eyebrow">FR-11 · Application Tracking</span>
+    <h1>My <span class="accent">Applications</span></h1>
+    <p class="hero-sub">
+      {{ counts.All }} total &nbsp;·&nbsp; Track every stage of your journey
+    </p>
+  </div>
+  <div class="orb orb--bl"></div>
+</header>
+
+<main class="container pb-60">
+
+  {# ════════════════════════════════════════
+     STATUS FILTER PILLS  (FR-11)
+  ════════════════════════════════════════ #}
+  {% set pill_color = {
+    'Applied':             '#2DD4BF',
+    'Under Review':        '#60A5FA',
+    'Shortlisted':         '#F59E0B',
+    'Interview Scheduled': '#A78BFA',
+    'Rejected':            '#F87171',
+    'Offered':             '#4ADE80'
+  } %}
+
+  <div class="filter-bar">
+
+    <a href="{{ url_for('applications.my_applications') }}"
+       class="fpill {% if status_filter == 'All' %}fpill--on{% endif %}"
+       style="--pc:#2DD4BF">
+      All <span class="fpill__n">{{ counts.All }}</span>
+    </a>
+
+    {% for status in status_list %}
+    <a href="{{ url_for('applications.my_applications', status=status) }}"
+       class="fpill {% if status_filter == status %}fpill--on{% endif %}"
+       style="--pc:{{ pill_color[status] }}">
+      {{ status }} <span class="fpill__n">{{ counts[status] }}</span>
+    </a>
+    {% endfor %}
+
+  </div>
+
+  {# ════════════════════════════════════════
+     APPLICATION CARDS  (FR-11)
+  ════════════════════════════════════════ #}
+  {% set status_icon = {
+    'Applied':             '📨',
+    'Under Review':        '🔍',
+    'Shortlisted':         '⭐',
+    'Interview Scheduled': '📅',
+    'Rejected':            '✕',
+    'Offered':             '🎉'
+  } %}
+  {% set prog_steps  = ['Applied','Under Review','Shortlisted','Interview Scheduled'] %}
+  {% set prog_colors = ['#2DD4BF','#60A5FA','#F59E0B','#A78BFA'] %}
+
+  {% if applications %}
+  <div class="app-list">
+    {% for app in applications %}
+    {% set sc = pill_color[app.status] %}
+    {% set si = status_icon[app.status] %}
+
+    <article class="app-card" style="animation-delay:{{ loop.index0 * 0.07 }}s; --ac:{{ sc }}">
+
+      {# Top row: identity + badge #}
+      <div class="app-card__top">
+        <div class="app-card__identity">
+          <div class="logo-badge" style="--lc:{{ app.color }}">{{ app.logo }}</div>
+          <div>
+            <h2 class="app-card__title">{{ app.title }}</h2>
+            <p class="app-card__sub">{{ app.company }}</p>
+            <p class="app-card__date">Applied {{ app.date }}</p>
+          </div>
+        </div>
+        <span class="status-badge" style="--bc:{{ sc }}">
+          {{ si }} {{ app.status }}
+        </span>
+      </div>
+
+      {# ── Progress tracker (non-terminal) ── #}
+      {% if app.status not in ['Rejected', 'Offered'] %}
+      <div class="prog-track">
+        {% for step in prog_steps %}
+        {% set si_prog = loop.index0 %}
+        {% set cur_idx = prog_steps.index(app.status) if app.status in prog_steps else -1 %}
+        {% set done    = si_prog <= cur_idx %}
+        {% set current = si_prog == cur_idx %}
+        {% set step_icons = {'Applied':'📨','Under Review':'🔍','Shortlisted':'⭐','Interview Scheduled':'📅'} %}
+
+        <div class="prog-step
+          {% if done %}prog-step--done{% endif %}
+          {% if current %}prog-step--active{% endif %}"
+          style="--sc:{{ prog_colors[si_prog] }}"
+          title="{{ step }}">
+          <div class="prog-dot">
+            {% if done %}{{ step_icons[step] }}{% endif %}
+          </div>
+          <span class="prog-lbl">{{ step }}</span>
+        </div>
+
+        {% if not loop.last %}
+        <div class="prog-line
+          {% if si_prog < cur_idx %}prog-line--filled{% endif %}"
+          style="--lc1:{{ prog_colors[si_prog] }};--lc2:{{ prog_colors[si_prog + 1] }}">
+        </div>
+        {% endif %}
+
+        {% endfor %}
+      </div>
+
+      {# ── Offered terminal banner ── #}
+      {% elif app.status == 'Offered' %}
+      <div class="term-banner term-banner--offered">
+        🎉 Congratulations! You've received an offer for this position.
+      </div>
+
+      {# ── Rejected terminal banner ── #}
+      {% elif app.status == 'Rejected' %}
+      <div class="term-banner term-banner--rejected">
+        This application was not progressed. Keep going — the right role is ahead!
+      </div>
+      {% endif %}
+
+    </article>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  {# Empty state #}
+  <div class="empty-state">
+    <div class="empty-state__icon">📭</div>
+    <h2>
+      {% if status_filter == 'All' %}No applications yet
+      {% else %}No "{{ status_filter }}" applications{% endif %}
+    </h2>
+    <p>
+      {% if status_filter == 'All' %}You haven't applied to any jobs yet.
+      {% else %}You have no applications with this status.{% endif %}
+    </p>
+    <a href="{{ url_for('applications.browse_jobs') }}" class="btn btn--primary">
+      Browse Jobs →
+    </a>
+  </div>
+  {% endif %}
+
+</main>
+{% endblock %}

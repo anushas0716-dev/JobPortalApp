@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Search Candidates{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">
+        <i class="fas fa-search me-2 text-primary"></i>Search Candidates
+    </h2>
+    <span class="badge bg-primary fs-6">{{ total }} result(s)</span>
+</div>
+
+<!-- Filters - FR-15 -->
+<div class="card mb-4">
+    <div class="card-header fw-semibold">Search Filters</div>
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Keyword (Name / Role / Bio)</label>
+                <input type="text" name="keyword" class="form-control" value="{{ keyword }}"
+                       placeholder="e.g. Django developer">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Skill</label>
+                <input type="text" name="skill" class="form-control" value="{{ skill_filter }}"
+                       placeholder="e.g. Machine Learning">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Location</label>
+                <input type="text" name="location" class="form-control" value="{{ location_filter }}"
+                       placeholder="e.g. Bangalore">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Min Experience (yrs)</label>
+                <input type="number" name="exp_min" class="form-control" value="{{ exp_min }}" min="0">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Max Experience (yrs)</label>
+                <input type="number" name="exp_max" class="form-control" value="{{ exp_max }}" min="0">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <div class="form-check">
+                    <input type="checkbox" name="open_to_work" value="1" class="form-check-input"
+                           id="openToWork" {% if open_to_work == '1' %}checked{% endif %}>
+                    <label class="form-check-label" for="openToWork">Open to Work only</label>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-1"></i>Search
+                </button>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <a href="{{ url_for('candidate_search') }}" class="btn btn-outline-secondary w-100">
+                    Clear Filters
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if candidates %}
+<div class="row g-3">
+    {% for c in candidates %}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex gap-3 align-items-start">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center
+                         justify-content-center flex-shrink-0"
+                         style="width:48px;height:48px;font-size:1.2rem;font-weight:700;">
+                        {{ c.full_name[0].upper() }}
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-0 fw-bold">
+                                <a href="{{ url_for('candidate_profile_view', candidate_id=c.id) }}"
+                                   class="text-decoration-none text-dark">{{ c.full_name }}</a>
+                            </h6>
+                            {% if c.is_open_to_work %}
+                            <span class="badge bg-success" style="font-size:0.7rem;">Open to Work</span>
+                            {% endif %}
+                        </div>
+                        {% if c.current_role %}
+                        <p class="text-muted small mb-1">{{ c.current_role }}</p>
+                        {% endif %}
+                        <div class="text-muted small d-flex gap-2 flex-wrap mb-2">
+                            {% if c.experience_years %}
+                            <span><i class="fas fa-chart-line me-1"></i>{{ c.experience_years }} yrs</span>
+                            {% endif %}
+                            {% if c.location %}
+                            <span><i class="fas fa-map-marker-alt me-1"></i>{{ c.location }}</span>
+                            {% endif %}
+                            {% if c.education %}
+                            <span><i class="fas fa-graduation-cap me-1"></i>{{ c.education }}</span>
+                            {% endif %}
+                        </div>
+                        {% if c.skills %}
+                        <div>
+                            {% for skill in c.skills_list()[:5] %}
+                            <span class="badge bg-light text-dark border me-1" style="font-size:0.75rem;">{{ skill }}</span>
+                            {% endfor %}
+                            {% if c.skills_list()|length > 5 %}
+                            <span class="text-muted small">+{{ c.skills_list()|length - 5 }} more</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 pt-0">
+                <a href="{{ url_for('candidate_profile_view', candidate_id=c.id) }}"
+                   class="btn btn-sm btn-outline-primary w-100">
+                    <i class="fas fa-user me-1"></i>View Full Profile
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card text-center py-5">
+    <div class="card-body">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">No candidates found</h5>
+        <p class="text-muted">Try adjusting your search filters.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
