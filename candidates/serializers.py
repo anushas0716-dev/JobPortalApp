@@ -44,6 +44,10 @@ class ResumeSerializer(serializers.ModelSerializer):
             'file_size', 'is_primary', 'uploaded_at'
         ]
         read_only_fields = ['id', 'uploaded_at']
+<<<<<<< HEAD
+=======
+        ref_name = 'CandidateResume'   # ← fix added
+>>>>>>> upstream/jobportelteam
 
     def get_file_url(self, obj):
         request = self.context.get('request')
@@ -76,9 +80,15 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
 
 
 class CandidateFullProfileSerializer(serializers.ModelSerializer):
+<<<<<<< HEAD
     educations       = EducationSerializer(many=True, read_only=True)
     work_experiences = WorkExperienceSerializer(many=True, read_only=True)
     skills           = ResumeSkillSerializer(many=True, read_only=True)
+=======
+    educations        = EducationSerializer(many=True, read_only=True)
+    work_experiences  = WorkExperienceSerializer(many=True, read_only=True)
+    skills            = ResumeSkillSerializer(many=True, read_only=True)
+>>>>>>> upstream/jobportelteam
     candidate_resumes = ResumeSerializer(many=True, read_only=True)
 
     class Meta:

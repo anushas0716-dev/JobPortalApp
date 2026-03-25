@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from .models import Resume
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/jobportelteam
 class ResumeSerializer(serializers.ModelSerializer):
     candidate_name = serializers.CharField(
         source='candidate.full_name', read_only=True
@@ -14,9 +17,16 @@ class ResumeSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'candidate', 'candidate_name',
             'title', 'file', 'file_url', 'file_size',
+<<<<<<< HEAD
             'is_primary', 'uploaded_at',
         ]
         read_only_fields = ['id', 'uploaded_at']
+=======
+            'is_default', 'created_at',
+        ]
+        read_only_fields = ['id', 'created_at']
+        ref_name = 'ResumeUpload'
+>>>>>>> upstream/jobportelteam
 
     def get_file_url(self, obj):
         request = self.context.get('request')
