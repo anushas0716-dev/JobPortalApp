@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ HEAD
 # JobSphere — Job Seeker Dashboard
 
 A production-ready React dashboard implementing FR-16 from the Job Portal Application requirements.
@@ -24,16 +24,13 @@ Check your versions:
 ```bash
 node -v
 npm -v
-```
 
----
 
 ### Step 1 — Extract the ZIP
 Unzip the downloaded file:
 ```bash
 unzip jobsphere-dashboard.zip
 cd jobsphere
-```
 
 ### Step 2 — Install Dependencies
 ```bash
@@ -233,6 +230,4 @@ REACT_APP_API_URL=http://localhost:8001/api
 - **Progressive Enhancement**: Graceful degradation
 
 ---
-
-
->>>>>>> ce394b553fba7a911f2cefdeb4d60912302943c0
+ce394b553fba7a911f2cefdeb4d60912302943c0
