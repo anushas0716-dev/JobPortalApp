@@ -1,219 +1,132 @@
- HEAD
-# JobSphere — Job Seeker Dashboard
+# 🚀 Job Portal Application
 
-A production-ready React dashboard implementing FR-16 from the Job Portal Application requirements.
+A full-stack Job Portal system with multiple modules including Job Seeker Dashboard and Company Registration.
 
-## Features
-- ✨ Recommended Jobs with match %
-- 🔖 Saved Jobs with deadline countdown
+---
+
+## 📌 Overview
+
+This project includes:
+
+### 🔹 JobSphere — Job Seeker Dashboard (FR-16)
+A modern React dashboard for job seekers to track applications, view recommended jobs, and manage their profile.
+
+### 🔹 Company Registration Frontend (FR-12)
+A responsive React application for companies to register, manage profiles, and upload company details.
+
+---
+
+## ✨ Features
+
+### 🧑‍💼 Job Seeker Dashboard
+- 📊 Application Tracker with charts
+- 🔖 Saved Jobs with expiry tracking
 - 🕐 Recently Viewed Jobs
-- 📊 Application Tracker with animated bar chart & filter tabs
-- 👤 Profile Completion with animated progress bar
-- 🔔 Notifications with read/unread state
+- 💼 Recommended Jobs with match %
+- 👤 Profile Completion indicator
+- 🔔 Notifications system
 
+---
 
-## How to Run
+### 🏢 Company Registration
+- Multi-step registration form
+- Company details (name, industry, location, etc.)
+- Logo upload with preview
+- Form validation & error handling
+- Review before submission
+- Fully responsive UI
 
-### Prerequisites
-Make sure you have these installed:
-- **Node.js** v16 or above → https://nodejs.org
-- **npm** (comes with Node.js)
+---
 
-Check your versions:
-bash
-node -v
-npm -v
+## 🛠️ Tech Stack
 
+### Frontend
+- React 18
+- React Router DOM
+- Tailwind CSS
+- Axios
+- React Hook Form
+- React Dropzone
 
-### Step 1 — Extract the ZIP
-Unzip the downloaded file:
-bash
-unzip jobsphere-dashboard.zip
-cd jobsphere
+### Backend
+- Node.js (Express)
+- Django (for APIs and models)
 
-### Step 2 — Install Dependencies
-bash
-npm install
-
-This downloads all required packages into a `node_modules/` folder.  
-_(Takes ~1–2 minutes on first run)_
-
-### Step 3 — Start Development Server
-bash
-npm start
-
-The app will open automatically at:
-http://localhost:3000
-
-
-## Project Structure
-
-jobsphere/
-├── public/
-│   └── index.html            # HTML entry point
-├── src/
-│   ├── index.js              # React root render
-│   ├── App.js                # App wrapper
-│   ├── data/
-│   │   └── dashboardData.js  # All mock data (jobs, notifications, etc.)
-│   ├── styles/
-│   │   └── dashboard.css     # All styles & CSS variables
-│   └── components/
-│       ├── Dashboard.jsx         # Main layout orchestrator
-│       ├── Sidebar.jsx           # Left navigation sidebar
-│       ├── StatCards.jsx         # 4 top stat cards
-│       ├── RecommendedJobs.jsx   # FR-16: Recommended jobs
-│       ├── ProfileCard.jsx       # FR-16: Profile completion %
-│       ├── ApplicationTracker.jsx# FR-16: Application statistics
-│       ├── SavedAndRecent.jsx    # FR-16: Saved + Recently viewed
-│       └── NotificationsCard.jsx # FR-16: Notifications
-└── package.json
-## Build for Production
-bash
-npm run build
-
-Output goes to the `build/` folder — ready to deploy to any static host (Netlify, Vercel, etc.).
-
-## Customizing Data
-All mock data is in `src/data/dashboardData.js`.  
-Edit the arrays to change job listings, notifications, application statuses, etc.
-# Company Registration Frontend
-
-## 🎯 Overview
-
-A modern React frontend for company registration and profile management, built for the Job Portal application.
-
-## 🚀 Features
-
-### **FR-12: Company Profile Management**
-- ✅ **Multi-step registration form** with progress indicator
-- ✅ **Company information fields**: Name, industry, website, size, location
-- ✅ **Additional details**: Description, founded year, social media links
-- ✅ **Logo upload** with drag-and-drop interface
-- ✅ **Form validation** with real-time error handling
-- ✅ **Review step** before final submission
-- ✅ **Responsive design** for all devices
-- ✅ **Modern UI** with smooth animations and transitions
-
-### **Technical Stack**
-- **Frontend**: React 18, React Router DOM
-- **Styling**: Tailwind CSS with custom components
-- **Forms**: React Hook Form for validation
-- **File Upload**: React Dropzone for logo handling
-- **API Integration**: Axios for backend communication
-- **Icons**: Lucide React for modern iconography
-- **State Management**: React Context for auth and theme
+---
 
 ## 📁 Project Structure
+jobportal/
+├── frontend/ # React frontend
+├── backend/ # Node.js backend
+├── src/ # Dashboard components
+├── applications/ # Application module
+├── companies/ # Company module
+├── candidates/ # Candidate module
+├── jobs/ # Jobs module
+├── users/ # User management
+├── messaging/ # Messaging system
+├── notifications/ # Notifications
+└── manage.py # Django entry point
 
+---
 
-company-registration/
-├── public/
-│   └── index.html
-├── src/
-│   ├── components/
-│   ├── contexts/
-│   │   ├── AuthContext.js
-│   │   └── ThemeContext.js
-│   ├── pages/
-│   │   ├── CompanyRegistration.js
-│   │   └── CompanyDashboard.js
-│   ├── services/
-│   │   └── api.js
-│   ├── App.js
-│   └── index.css
-├── package.json
-├── tailwind.config.js
-└── README.md
+## ⚙️ Installation & Setup
 
-## 🛠️ Installation & Setup
+### 🔹 Clone the repository
+git clone https://github.com/your-username/JobPortalApp.git
 
-### Prerequisites
-- Node.js 16+ 
-- npm or yarn
+cd JobPortalApp
+---
 
-### Installation Steps
-bash
-cd company-registration
+### 🔹 Install dependencies
+
+#### Frontend
+cd frontend
 npm install
 npm start
 
+#### Backend (Node.js)
+cd backend
+npm install
+npm start
 
-### Environment Configuration
-Create a `.env` file in the root:
-env
-REACT_APP_API_URL=http://localhost:8001/api
+#### Django Backend
+pip install -r requirements.txt
+python manage.py runserver
 
+---
 
-## 🎨 Key Components
+## 🌐 Environment Variables
 
-### **CompanyRegistration.js**
-- Multi-step form with validation
-- Logo upload with preview
-- Progress indicators
-- Responsive design
-- Error handling
+Create `.env` file:
+REACT_APP_API_URL=http://localhost:8000/api
 
-### **CompanyDashboard.js**
-- Company statistics dashboard
-- Navigation sidebar
-- Stats cards with gradients
-- Responsive grid layout
+---
 
-### **AuthContext.js**
-- Authentication state management
-- Login/logout functionality
-- Token management
+## 🚀 Build for Production
+npm run build
 
-### **API Integration**
-- Axios-based API service
-- Proper error handling
-- FormData support for file uploads
-
-## 🎨 Features Implemented
-
-### **Registration Flow**
-1. **Step 1**: Basic company information
-   - Company name, industry, website, size, location
-   - Form validation and error handling
-   
-2. **Step 2**: Additional details
-   - Company description, founded year, social media
-   - Logo upload with drag-and-drop
-   - Image preview functionality
-   
-3. **Step 3**: Review and submit
-   - Review all entered information
-   - Final validation before submission
-   - Loading states and success feedback
-
-### **UI/UX Features**
-- **Responsive Design**: Mobile-first approach
-- **Modern Styling**: Tailwind CSS with custom components
-- **Smooth Animations**: CSS transitions and hover effects
-- **Accessibility**: Proper ARIA labels and semantic HTML
-- **Error Handling**: User-friendly error messages
-- **Loading States**: Spinners and disabled states
-
-## 🔧 API Integration
-
-### **Endpoints Used**
-- `POST /api/users/login/` - Authentication
-- `POST /api/companies/register/` - Company registration
-- `GET /api/companies/{id}/` - Company details
-- `PUT /api/companies/{id}/` - Update company
-
-### **Data Flow**
-1. User fills registration form
-2. Client-side validation
-3. API submission with FormData
-4. Backend validation and processing
-5. Success response and redirect to dashboard
+---
 
 ## 📱 Browser Support
+- Chrome
+- Firefox
+- Edge
+- Safari
 
-- **Modern Browsers**: Chrome, Firefox, Safari, Edge
-- **Mobile Responsive**: Works on all screen sizes
-- **Progressive Enhancement**: Graceful degradation
+---
 
-ce394b553fba7a911f2cefdeb4d60912302943c0
+## 📌 Notes
+- This project is part of Job Portal Application requirements.
+- Includes both frontend and backend modules.
+- Designed for scalability and real-world use.
+
+---
+
+## 👩‍💻 Author
+**Anusha S**
+
+---
+
+## ⭐ If you like this project
+Give it a ⭐ on GitHub!
